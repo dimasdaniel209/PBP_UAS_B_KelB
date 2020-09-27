@@ -21,9 +21,11 @@ public class AddFragment extends Fragment {
 
     TextInputEditText edtJumlah, edtBerat, edtLayanan;
     Button cancelBtn, addBtn;
-    String jumlah;
-    String berat;
+    String tempJumlah;
+    String tempBerat;
     String layanan;
+    Integer jumlah;
+    double berat;
 
     public AddFragment() {
         // Required empty public constructor
@@ -57,17 +59,19 @@ public class AddFragment extends Fragment {
         addBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                jumlah = edtJumlah.getText().toString();
-                berat = edtBerat.getText().toString();
+                tempJumlah = edtJumlah.getText().toString();
+                jumlah = Integer.parseInt(tempJumlah);
+                tempBerat = edtBerat.getText().toString();
+                berat = Double.parseDouble(tempBerat);
                 layanan = edtLayanan.getText().toString();
 
-                if(jumlah.isEmpty()){
+                if(tempJumlah.isEmpty()){
                     edtJumlah.setError("Please fill correctly");}
-                if(berat.isEmpty()){
+                if(tempBerat.isEmpty()){
                     edtBerat.setError("Please fill correctly");}
                 if(layanan.isEmpty()){
                     edtLayanan.setError("Please fill correctly");}
-                if(!jumlah.isEmpty() && !berat.isEmpty() && !layanan.isEmpty()) {
+                if(!tempJumlah.isEmpty() && !tempBerat.isEmpty() && !layanan.isEmpty()) {
                     addUser();
                     FragmentTransaction transaction = getFragmentManager().beginTransaction();
                     transaction.hide(AddFragment.this).commit();

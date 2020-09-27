@@ -45,7 +45,7 @@
             app:layout_constraintStart_toStartOf="@+id/textView"
             app:layout_constraintTop_toBottomOf="@+id/search_view">
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/user_rv"
+                android:id="@+id/order_rv"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 tools:listitem="@layout/item_order"/>

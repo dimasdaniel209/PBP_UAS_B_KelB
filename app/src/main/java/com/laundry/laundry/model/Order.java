@@ -12,14 +12,6 @@ import java.io.Serializable;
 @Entity
 public class Order extends BaseObservable implements Serializable {
 
-    public Order(){ }
-    public Order(Integer id, Integer jumlah_pakaian, Double berat, String layanan){
-        this.id = id;
-        this.jumlah_pakaian = jumlah_pakaian;
-        this.berat = berat;
-        this.layanan = layanan;
-    }
-
     @PrimaryKey(autoGenerate = true)
     public int id;
 

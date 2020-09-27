@@ -42,7 +42,7 @@ public class OrderRecyclerViewAdapter extends RecyclerView.Adapter<OrderRecycler
         order = orderList.get(position);
         holder.viewId.setText(order.getId());
         holder.viewJP.setText(order.getJumlah_pakaian());
-        holder.viewBerat.setText(order.getBerat());
+        holder.viewBerat.setText((int) order.getBerat());
         holder.viewLayanan.setText(order.getLayanan());
     }
 

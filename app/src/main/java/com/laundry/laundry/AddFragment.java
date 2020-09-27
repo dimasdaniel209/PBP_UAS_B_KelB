@@ -19,7 +19,6 @@ import com.laundry.laundry.model.Order;
 
 public class AddFragment extends Fragment {
 
-
     TextInputEditText edtJumlah, edtBerat, edtLayanan;
     Button cancelBtn, addBtn;
     String jumlah;
@@ -97,7 +96,7 @@ public class AddFragment extends Fragment {
             @Override
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
-                    Toast.makeText(getActivity().getApplicationContext(), "User saved", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity().getApplicationContext(), "Order saved", Toast.LENGTH_SHORT).show();
             }
         }
         AddUser add = new AddUser();

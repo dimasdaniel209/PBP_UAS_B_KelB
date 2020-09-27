@@ -13,7 +13,7 @@ public class DatabaseOrder {
 
     private DatabaseOrder(Context context){
         this.context = context;
-        database = Room.databaseBuilder(context, AppDatabase.class, "user").build();
+        database = Room.databaseBuilder(context, AppDatabase.class, "order").build();
     }
 
     public static synchronized DatabaseOrder getInstance(Context context){

@@ -7,7 +7,6 @@ import android.view.Menu;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 import com.laundry.laundry.adapter.OrderRecyclerViewAdapter;
 import com.laundry.laundry.database.DatabaseOrder;
@@ -64,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
                 refreshLayout.setRefreshing(false);
             }
         });
-
+        addOrders();
     }
 
     @Override
@@ -81,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
                 || super.onSupportNavigateUp();
     }
 
-    private void addUser() {
+    private void addOrders() {
         fabAdd = findViewById(R.id.fab);
         fabAdd.setOnClickListener(new View.OnClickListener() {
             @Override

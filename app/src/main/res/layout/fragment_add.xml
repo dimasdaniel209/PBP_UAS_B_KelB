@@ -69,7 +69,6 @@
                 android:layout_height="match_parent"
                 android:autofillHints=""
                 android:hint="@string/layanan"
-                android:inputType="number"
                 android:text="@={order.layanan}"/>
         </com.google.android.material.textfield.TextInputLayout>
 

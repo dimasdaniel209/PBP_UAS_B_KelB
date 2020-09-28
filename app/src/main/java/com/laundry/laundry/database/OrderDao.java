@@ -14,7 +14,7 @@ import java.util.List;
 @Dao
 public interface OrderDao {
 
-    @Query("SELECT * FROM `Order`")
+    @Query("SELECT * FROM `order`")
     List<Order> getAll();
 
     @Insert

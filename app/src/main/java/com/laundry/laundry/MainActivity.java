@@ -29,10 +29,6 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
-    private RecyclerView recyclerView;
-    private FloatingActionButton fabAdd;
-    private OrderRecyclerViewAdapter adapter;
-    private SwipeRefreshLayout refreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,18 +48,6 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
-        recyclerView = findViewById(R.id.order_rv);
-        recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
-
-        refreshLayout = findViewById(R.id.swipe_refresh);
-        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                getOrders();
-                refreshLayout.setRefreshing(false);
-            }
-        });
-        addOrders();
     }
 
     @Override
@@ -80,41 +64,4 @@ public class MainActivity extends AppCompatActivity {
                 || super.onSupportNavigateUp();
     }
 
-    private void addOrders() {
-        fabAdd = findViewById(R.id.fab);
-        fabAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                fragmentTransaction.replace(R.id.frame_layout, new AddFragment()).commit();
-            }
-        });
-    }
-
-    private void getOrders() {
-        class GetOrders extends AsyncTask<Void, Void, List<Order>> {
-
-            @Override
-            protected List<Order> doInBackground(Void... voids) {
-                List<Order> userList = DatabaseOrder
-                        .getInstance(getApplicationContext())
-                        .getDatabase()
-                        .userDao()
-                        .getAll();
-                return userList;
-            }
-
-            @Override
-            protected void onPostExecute(List<Order> orders) {
-                super.onPostExecute(orders);
-                adapter = new OrderRecyclerViewAdapter(MainActivity.this, orders);
-                recyclerView.setAdapter(adapter);
-                if (orders.isEmpty()) {
-                    Toast.makeText(getApplicationContext(), "Empty List", Toast.LENGTH_SHORT).show();
-                }
-            }
-        }
-        GetOrders get = new GetOrders();
-        get.execute();
-    }
 }

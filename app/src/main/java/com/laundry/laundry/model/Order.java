@@ -2,10 +2,11 @@ package com.laundry.laundry.model;
 
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
-import androidx.databinding.library.baseAdapters.BR;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+
+import com.laundry.laundry.BR;
 
 import java.io.Serializable;
 
@@ -35,7 +36,7 @@ public class Order extends BaseObservable implements Serializable {
     }
 
     @Bindable
-    public String geStringId() {
+    public String getStringId() {
         return String.valueOf(id);
     }
 

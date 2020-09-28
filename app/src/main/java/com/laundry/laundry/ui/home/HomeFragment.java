@@ -1,22 +1,39 @@
 package com.laundry.laundry.ui.home;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.laundry.laundry.AddFragment;
 import com.laundry.laundry.R;
+import com.laundry.laundry.adapter.OrderRecyclerViewAdapter;
+import com.laundry.laundry.database.DatabaseOrder;
+import com.laundry.laundry.model.Order;
+
+import java.util.List;
 
 public class HomeFragment extends Fragment {
 
     private HomeViewModel homeViewModel;
+    private RecyclerView recyclerView;
+    private FloatingActionButton fabAdd;
+    private OrderRecyclerViewAdapter adapter;
+    private SwipeRefreshLayout refreshLayout;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -24,6 +41,60 @@ public class HomeFragment extends Fragment {
                 ViewModelProviders.of(this).get(HomeViewModel.class);
         View root = inflater.inflate(R.layout.fragment_home, container, false);
 
+        recyclerView = root.findViewById(R.id.order_rv);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+
+        refreshLayout = root.findViewById(R.id.swipe_refresh);
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getOrders();
+                refreshLayout.setRefreshing(false);
+            }
+        });
+        addOrders(root);
+        getOrders();
+        addOrders(root);
+
         return root;
+    }
+
+    private void addOrders(View view) {
+        fabAdd = view.findViewById(R.id.fab);
+        fabAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.frame_layout, new AddFragment()).commit();
+            }
+        });
+    }
+
+    private void getOrders() {
+        class GetOrders extends AsyncTask<Void, Void, List<Order>> {
+
+            @Override
+            protected List<Order> doInBackground(Void... voids) {
+                List<Order> orderList = DatabaseOrder
+                        .getInstance(getActivity().getApplicationContext())
+                        .getDatabase()
+                        .userDao()
+                        .getAll();
+                return orderList;
+            }
+
+            @Override
+            protected void onPostExecute(List<Order> orders) {
+                super.onPostExecute(orders);
+                adapter = new OrderRecyclerViewAdapter(getActivity(), orders);
+                recyclerView.setAdapter(adapter);
+                if (orders.isEmpty()) {
+                    Toast.makeText(getActivity().getApplicationContext(), "Empty List", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+        GetOrders get = new GetOrders();
+        get.execute();
     }
 }

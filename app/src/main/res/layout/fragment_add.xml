@@ -32,7 +32,7 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/jumlah"
+                android:id="@+id/add_jumlah"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:autofillHints=""
@@ -48,7 +48,7 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/berat"
+                android:id="@+id/add_berat"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:autofillHints=""
@@ -64,7 +64,7 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/layanan"
+                android:id="@+id/add_layanan"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:autofillHints=""

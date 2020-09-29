@@ -15,12 +15,16 @@
     <string name="title_home">List Order</string>
 
     <string name="addOrder">Tambah Order</string>
+    <string name="updateOrder">Edit Order</string>
+
     <string name="jumlah">Jumlah Pakaian</string>
     <string name="berat">Berat Total</string>
     <string name="layanan">Jenis Layanan</string>
 
     <string name="cancel">BATAL</string>
     <string name="add">TAMBAH</string>
+    <string name="save">SIMPAN</string>
+    <string name="delete">DELETE</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

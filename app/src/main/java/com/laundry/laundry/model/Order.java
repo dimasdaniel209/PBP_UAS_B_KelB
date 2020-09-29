@@ -88,7 +88,7 @@ public class Order extends BaseObservable implements Serializable {
         return String.valueOf(berat);
     }
 
-    public void setStringBerat(String  berat) {
+    public void setStringBerat(String berat) {
         if(!berat.isEmpty()){
             this.berat = Double.parseDouble(berat);
         }else {

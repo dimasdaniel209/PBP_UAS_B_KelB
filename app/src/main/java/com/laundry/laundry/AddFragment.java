@@ -21,10 +21,9 @@ public class AddFragment extends Fragment {
 
     TextInputEditText edtJumlah, edtBerat, edtLayanan;
     Button cancelBtn, addBtn;
-    String tempJumlah;
-    String tempBerat;
-    String layanan;
-    Integer jumlah;
+
+    String tempJumlah, tempBerat, layanan;
+    int jumlah;
     double berat;
 
     public AddFragment() {
@@ -36,9 +35,9 @@ public class AddFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_add, container, false);
 
-        edtJumlah = view.findViewById(R.id.jumlah);
-        edtBerat = view.findViewById(R.id.berat);
-        edtLayanan = view.findViewById(R.id.layanan);
+        edtJumlah = view.findViewById(R.id.add_jumlah);
+        edtBerat = view.findViewById(R.id.add_berat);
+        edtLayanan = view.findViewById(R.id.add_layanan);
         cancelBtn = view.findViewById(R.id.btnCancel);
         addBtn = view.findViewById(R.id.btnAdd);
 

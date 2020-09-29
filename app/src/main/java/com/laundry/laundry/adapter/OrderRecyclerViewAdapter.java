@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -12,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.laundry.laundry.R;
+import com.laundry.laundry.UpdateFragment;
 import com.laundry.laundry.model.Order;
 
 import java.util.ArrayList;
@@ -40,19 +42,19 @@ public class OrderRecyclerViewAdapter extends RecyclerView.Adapter<OrderRecycler
     @Override
     public void onBindViewHolder(@NonNull OrderRecyclerViewAdapter.UserViewHolder holder, int position) {
         order = orderList.get(position);
-        holder.viewId.setText(order.getId());
-        holder.viewJP.setText(order.getJumlah_pakaian());
-        holder.viewBerat.setText((int) order.getBerat());
+        holder.viewId.setText(order.getStringId());
+        holder.viewJP.setText(order.getStringJumlah_pakaian());
+        holder.viewBerat.setText(order.getStringBerat());
         holder.viewLayanan.setText(order.getLayanan());
     }
 
     @Override
     public int getItemCount() { return orderList.size(); }
 
-//    public Filter getFilter() { return filterUser; }
+    public Filter getFilter() { return filterOrder; }
 
     public class UserViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView viewId, viewJP, viewBerat, viewLayanan, viewTanggal;
+        TextView viewId, viewJP, viewBerat, viewLayanan;
 
         public UserViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -60,8 +62,6 @@ public class OrderRecyclerViewAdapter extends RecyclerView.Adapter<OrderRecycler
             viewJP = itemView.findViewById(R.id.jumlah_pakaian);
             viewBerat = itemView.findViewById(R.id.berat);
             viewLayanan = itemView.findViewById(R.id.layanan);
-
-
             itemView.setOnClickListener(this);
         }
 
@@ -71,49 +71,47 @@ public class OrderRecyclerViewAdapter extends RecyclerView.Adapter<OrderRecycler
             Bundle data = new Bundle();
             Order order = orderList.get(getAdapterPosition());
             data.putSerializable("order", order);
-//            UpdateFragment updateFragment = new UpdateFragment();
-//            updateFragment.setArguments(data);
-//
-//            activity.getSupportFragmentManager()
-//                    .beginTransaction()
-//                    .replace(R.id.frame_layout, updateFragment)
-//                    .commit();
+            UpdateFragment updateFragment = new UpdateFragment();
+            updateFragment.setArguments(data);
+
+            activity.getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.frame_layout, updateFragment)
+                    .commit();
         }
     }
 
+    private Filter filterOrder = new Filter() {
 
-//
-//    private Filter filterUser = new Filter() {
-//
-//        @Override
-//        protected FilterResults performFiltering(CharSequence constraint) {
-//            List<Order> filteredList = new ArrayList<>();
-//
-//            if (constraint == null || constraint.length() == 0) {
-//                filteredList.addAll(userisFull);
-//            } else {
-//                String filterPattern = constraint.toString().toLowerCase().trim();
-//
-//                for (Order order : userisFull) {
-//                    if (order.getFullName().toLowerCase().contains(filterPattern)){
-//                        filteredList.add(order);
-//                    }
-//                }
-//            }
-//
-//            FilterResults results = new FilterResults();
-//            results.values = filteredList;
-//
-//            return results;
-//        }
-//
-//        @SuppressWarnings("unchecked")
-//        @Override
-//        protected void publishResults(CharSequence constraint, FilterResults results) {
-//            orderList.clear();
-//
-//            orderList.addAll((List<Order>) results.values);
-//            notifyDataSetChanged();
-//        }
-//    };
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<Order> filteredList = new ArrayList<>();
+
+            if (constraint == null || constraint.length() == 0) {
+                filteredList.addAll(userisFull);
+            } else {
+                String filterPattern = constraint.toString().toLowerCase().trim();
+
+                for (Order order : userisFull) {
+                    if (order.getStringId().toLowerCase().contains(filterPattern)){
+                        filteredList.add(order);
+                    }
+                }
+            }
+
+            FilterResults results = new FilterResults();
+            results.values = filteredList;
+
+            return results;
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            orderList.clear();
+
+            orderList.addAll((List<Order>) results.values);
+            notifyDataSetChanged();
+        }
+    };
 }

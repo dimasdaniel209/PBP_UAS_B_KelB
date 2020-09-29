@@ -1,10 +1,12 @@
 package com.laundry.laundry.ui.home;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,6 +22,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.laundry.laundry.AddFragment;
+import com.laundry.laundry.MainActivity;
 import com.laundry.laundry.R;
 import com.laundry.laundry.adapter.OrderRecyclerViewAdapter;
 import com.laundry.laundry.database.DatabaseOrder;
@@ -29,6 +32,7 @@ import java.util.List;
 
 public class HomeFragment extends Fragment {
 
+    private SearchView find;
     private HomeViewModel homeViewModel;
     private RecyclerView recyclerView;
     private FloatingActionButton fabAdd;
@@ -56,6 +60,7 @@ public class HomeFragment extends Fragment {
         addOrders(root);
         getOrders();
         addOrders(root);
+        search(root);
 
         return root;
     }
@@ -87,7 +92,7 @@ public class HomeFragment extends Fragment {
             @Override
             protected void onPostExecute(List<Order> orders) {
                 super.onPostExecute(orders);
-                adapter = new OrderRecyclerViewAdapter(getActivity(), orders);
+                adapter = new OrderRecyclerViewAdapter(getActivity().getApplicationContext(), orders);
                 recyclerView.setAdapter(adapter);
                 if (orders.isEmpty()) {
                     Toast.makeText(getActivity().getApplicationContext(), "Empty List", Toast.LENGTH_SHORT).show();
@@ -96,5 +101,21 @@ public class HomeFragment extends Fragment {
         }
         GetOrders get = new GetOrders();
         get.execute();
+    }
+
+    private void search(View root) {
+        find = root.findViewById(R.id.search_view);
+        find.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String query) {
+                adapter.getFilter().filter(query);
+                return false;
+            }
+        });
     }
 }

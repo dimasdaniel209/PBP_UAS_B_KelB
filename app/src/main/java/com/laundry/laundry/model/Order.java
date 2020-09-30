@@ -25,6 +25,9 @@ public class Order extends BaseObservable implements Serializable {
     @ColumnInfo(name = "layanan")
     public String layanan;
 
+    @ColumnInfo(name = "date")
+    public String date;
+
     @Bindable
     public int getId() {
         return id;
@@ -106,4 +109,15 @@ public class Order extends BaseObservable implements Serializable {
         this.layanan = layanan;
         notifyPropertyChanged(BR.layanan);
     }
+
+    @Bindable
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+        notifyPropertyChanged(BR.date);
+    }
+
 }

@@ -72,6 +72,21 @@
                 android:text="@={order.layanan}"/>
         </com.google.android.material.textfield.TextInputLayout>
 
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_marginTop="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/add_date"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:autofillHints=""
+                android:hint="@string/date"
+                android:text="@={order.date}"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
         <LinearLayout
             android:orientation="horizontal"
             android:layout_marginTop="16dp"

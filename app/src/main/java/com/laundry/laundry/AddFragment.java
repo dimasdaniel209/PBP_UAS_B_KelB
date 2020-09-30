@@ -1,11 +1,17 @@
 package com.laundry.laundry;
 
+import android.app.DatePickerDialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -17,14 +23,18 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.laundry.laundry.database.DatabaseOrder;
 import com.laundry.laundry.model.Order;
 
+import java.util.Calendar;
+
 public class AddFragment extends Fragment {
 
-    TextInputEditText edtJumlah, edtBerat, edtLayanan;
+    TextInputEditText edtJumlah, edtBerat, edtLayanan, mDisplayDate;
     Button cancelBtn, addBtn;
 
     String tempJumlah, tempBerat, layanan;
     int jumlah;
     double berat;
+    private DatePickerDialog.OnDateSetListener mDateSetListener;
+    private static final String TAG = "MainActivity";
 
     public AddFragment() {
         // Required empty public constructor
@@ -40,6 +50,7 @@ public class AddFragment extends Fragment {
         edtLayanan = view.findViewById(R.id.add_layanan);
         cancelBtn = view.findViewById(R.id.btnCancel);
         addBtn = view.findViewById(R.id.btnAdd);
+        mDisplayDate = view.findViewById(R.id.add_date);
 
         cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,6 +59,35 @@ public class AddFragment extends Fragment {
                 transaction.hide(AddFragment.this).commit();
             }
         });
+
+        mDisplayDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Calendar cal = Calendar.getInstance();
+                int year = cal.get(Calendar.YEAR);
+                int month = cal.get(Calendar.MONTH);
+                int day = cal.get(Calendar.DAY_OF_MONTH);
+
+                DatePickerDialog dialog = new DatePickerDialog(
+                        getActivity().getApplicationContext(),
+                        android.R.style.Theme_Holo_Light_Dialog_MinWidth,
+                        mDateSetListener,
+                        year,month,day);
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                dialog.show();
+            }
+        });
+
+        mDateSetListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                month = month + 1;
+                Log.d(TAG, "onDateSet: mm/dd/yyy: " + month + "/" + day + "/" + year);
+
+                String date = month + "/" + day + "/" + year;
+                mDisplayDate.setText(date);
+            }
+        };
 
         return view;
     }

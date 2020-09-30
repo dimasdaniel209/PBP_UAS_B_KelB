@@ -20,6 +20,7 @@
     <string name="jumlah">Jumlah Pakaian</string>
     <string name="berat">Berat Total</string>
     <string name="layanan">Jenis Layanan</string>
+    <string name="date">Tanggal Masuk</string>
 
     <string name="cancel">BATAL</string>
     <string name="add">TAMBAH</string>

@@ -10,16 +10,20 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.laundry.laundry.MainActivity;
 import com.laundry.laundry.R;
 import com.laundry.laundry.UpdateFragment;
 import com.laundry.laundry.model.Order;
+import com.laundry.laundry.ui.home.HomeFragment;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class OrderRecyclerViewAdapter extends RecyclerView.Adapter<OrderRecyclerViewAdapter.UserViewHolder>{
+public class OrderRecyclerViewAdapter extends RecyclerView.Adapter<OrderRecyclerViewAdapter.UserViewHolder> {
     private Context context;
     private Order order;
     private List<Order> orderList;
@@ -35,7 +39,7 @@ public class OrderRecyclerViewAdapter extends RecyclerView.Adapter<OrderRecycler
     @NonNull
     @Override
     public OrderRecyclerViewAdapter.UserViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_order, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_order, parent, false);
         return new UserViewHolder(view);
     }
 
@@ -68,12 +72,14 @@ public class OrderRecyclerViewAdapter extends RecyclerView.Adapter<OrderRecycler
         @Override
         public void onClick(View v) {
             AppCompatActivity activity = (AppCompatActivity) v.getContext();
+
             Bundle data = new Bundle();
             Order order = orderList.get(getAdapterPosition());
             data.putSerializable("order", order);
             UpdateFragment updateFragment = new UpdateFragment();
             updateFragment.setArguments(data);
 
+            context.getApplicationContext();
             activity.getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.frame_layout, updateFragment)

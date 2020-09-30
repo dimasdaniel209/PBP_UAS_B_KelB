@@ -114,6 +114,14 @@ public class UpdateFragment extends Fragment {
                         .show();
             }
         });
+
+        cancelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                fragmentTransaction.hide(UpdateFragment.this).commit();
+            }
+        });
     }
 
     private void update(final Order order) {

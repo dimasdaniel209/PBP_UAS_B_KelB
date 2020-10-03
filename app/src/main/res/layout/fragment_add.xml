@@ -57,35 +57,30 @@
                 android:text="@={order.stringBerat}"/>
         </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_marginTop="16dp"
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+            android:text="@string/layanan"
+            android:layout_marginTop="16dp"/>
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/add_layanan"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:autofillHints=""
-                android:hint="@string/layanan"
-                android:text="@={order.layanan}"/>
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_marginTop="16dp"
+        <RadioGroup
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/add_date"
+            android:orientation="horizontal"
+            android:id="@+id/radioGroup_layanan">
+            <com.google.android.material.radiobutton.MaterialRadioButton
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:autofillHints=""
-                android:hint="@string/date"
-                android:text="@={order.date}"/>
-        </com.google.android.material.textfield.TextInputLayout>
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:id="@+id/radio_reguler"
+                android:text="@string/layanan_reguler"/>
+            <com.google.android.material.radiobutton.MaterialRadioButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:id="@+id/radio_kilat"
+                android:text="@string/layanan_kilat"/>
+        </RadioGroup>
 
         <LinearLayout
             android:orientation="horizontal"
@@ -111,6 +106,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
         </LinearLayout>
+
+
 
     </LinearLayout>
 

@@ -1,8 +1,5 @@
 package com.laundry.laundry;
 
-import android.app.DatePickerDialog;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,8 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.DatePicker;
-import android.widget.TextView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -23,18 +20,19 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.laundry.laundry.database.DatabaseOrder;
 import com.laundry.laundry.model.Order;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 public class AddFragment extends Fragment {
 
-    TextInputEditText edtJumlah, edtBerat, edtLayanan, mDisplayDate;
+    TextInputEditText edtJumlah, edtBerat;
     Button cancelBtn, addBtn;
-
-    String tempJumlah, tempBerat, layanan;
+    String layanan="";
+    String tempJumlah, tempBerat, formattedDate;
     int jumlah;
     double berat;
-    private DatePickerDialog.OnDateSetListener mDateSetListener;
-    private static final String TAG = "MainActivity";
 
     public AddFragment() {
         // Required empty public constructor
@@ -43,14 +41,31 @@ public class AddFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_add, container, false);
+        final View view = inflater.inflate(R.layout.fragment_add, container, false);
 
+        //Menghubungkan dengan layout
         edtJumlah = view.findViewById(R.id.add_jumlah);
         edtBerat = view.findViewById(R.id.add_berat);
-        edtLayanan = view.findViewById(R.id.add_layanan);
         cancelBtn = view.findViewById(R.id.btnCancel);
         addBtn = view.findViewById(R.id.btnAdd);
-        mDisplayDate = view.findViewById(R.id.add_date);
+
+        //Condition untuk mendapatkan value dari button layanan yang dipilih
+        RadioGroup radioGroup = view.findViewById(R.id.radioGroup_layanan);
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                switch (i){
+                    case R.id.radio_reguler:
+                        RadioButton radioReg = view.findViewById(R.id.radio_reguler);
+                        layanan = radioReg.getText().toString();
+                        break;
+                    case R.id.radio_kilat:
+                        RadioButton radioKil = view.findViewById(R.id.radio_kilat);
+                        layanan = radioKil.getText().toString();
+                        break;
+                }
+            }
+        });
 
         cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,35 +74,6 @@ public class AddFragment extends Fragment {
                 transaction.hide(AddFragment.this).commit();
             }
         });
-
-        mDisplayDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Calendar cal = Calendar.getInstance();
-                int year = cal.get(Calendar.YEAR);
-                int month = cal.get(Calendar.MONTH);
-                int day = cal.get(Calendar.DAY_OF_MONTH);
-
-                DatePickerDialog dialog = new DatePickerDialog(
-                        getActivity().getApplicationContext(),
-                        android.R.style.Theme_Holo_Light_Dialog_MinWidth,
-                        mDateSetListener,
-                        year,month,day);
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                dialog.show();
-            }
-        });
-
-        mDateSetListener = new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                month = month + 1;
-                Log.d(TAG, "onDateSet: mm/dd/yyy: " + month + "/" + day + "/" + year);
-
-                String date = month + "/" + day + "/" + year;
-                mDisplayDate.setText(date);
-            }
-        };
 
         return view;
     }
@@ -99,19 +85,25 @@ public class AddFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 tempJumlah = edtJumlah.getText().toString();
-                jumlah = Integer.parseInt(tempJumlah);
                 tempBerat = edtBerat.getText().toString();
-                berat = Double.parseDouble(tempBerat);
-                layanan = edtLayanan.getText().toString();
 
+                //Dapatkan tanggal sesuai sistem
+                Date currentTime = Calendar.getInstance().getTime();
+                formattedDate = DateFormat.getDateInstance().format(currentTime);
+
+                //Exception jika field/ button null
                 if(tempJumlah.isEmpty()){
-                    edtJumlah.setError("Please fill correctly");}
+                    edtJumlah.setError("Silakan diisi dengan benar");}
                 if(tempBerat.isEmpty()){
-                    edtBerat.setError("Please fill correctly");}
-                if(layanan.isEmpty()){
-                    edtLayanan.setError("Please fill correctly");}
-                if(!tempJumlah.isEmpty() && !tempBerat.isEmpty() && !layanan.isEmpty()) {
-                    addUser();
+                    edtBerat.setError("Silakan diisi dengan benar");}
+                if (layanan.length()==0){
+                    Toast.makeText(getActivity().getApplicationContext(),
+                            "Silakan pilih layanan", Toast.LENGTH_SHORT).show();
+                }
+                if(!tempJumlah.isEmpty() && !tempBerat.isEmpty() && layanan.length()>0) {
+                    jumlah = Integer.parseInt(tempJumlah);
+                    berat = Double.parseDouble(tempBerat);
+                    addOrder();
                     FragmentTransaction transaction = getFragmentManager().beginTransaction();
                     transaction.hide(AddFragment.this).commit();
                 }
@@ -119,27 +111,29 @@ public class AddFragment extends Fragment {
         });
     }
 
-    private void addUser(){
+    //Method untuk memasukkan order ke dalam database
+    private void addOrder(){
         class AddUser extends AsyncTask<Void, Void, Void> {
 
             @Override
             protected Void doInBackground(Void... voids) {
-                    Order order = new Order();
-                    order.setBerat(berat);
-                    order.setJumlah_pakaian(jumlah);
-                    order.setLayanan(layanan);
+                Order order = new Order();
+                order.setBerat(berat);
+                order.setJumlah_pakaian(jumlah);
+                order.setLayanan(layanan);
+                order.setTanggal_masuk(formattedDate);
 
-                    DatabaseOrder.getInstance(getContext())
-                            .getDatabase()
-                            .userDao()
-                            .insert(order);
+                DatabaseOrder.getInstance(getContext())
+                        .getDatabase()
+                        .userDao()
+                        .insert(order);
                 return null;
             }
 
             @Override
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
-                    Toast.makeText(getActivity().getApplicationContext(), "Order saved", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity().getApplicationContext(), "Order saved", Toast.LENGTH_SHORT).show();
             }
         }
         AddUser add = new AddUser();

@@ -57,21 +57,24 @@
                 android:inputType="text" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_marginTop="16dp"
+        <RadioGroup
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edit_layanan"
+            android:orientation="horizontal"
+            android:id="@+id/radioGroup_layanan">
+            <com.google.android.material.radiobutton.MaterialRadioButton
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="@={order.layanan}"
-                android:autofillHints=""
-                android:hint="@string/layanan"
-                android:inputType="number" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:id="@+id/radio_edit_reguler"
+                android:text="@string/layanan_reguler"/>
+            <com.google.android.material.radiobutton.MaterialRadioButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:id="@+id/radio_edit_kilat"
+                android:text="@string/layanan_kilat"/>
+        </RadioGroup>
 
         <LinearLayout
             android:orientation="horizontal"

@@ -1,19 +1,10 @@
 package com.laundry.laundry;
 
-import android.content.Context;
-import android.os.AsyncTask;
+
 import android.os.Bundle;
-import android.view.View;
 import android.view.Menu;
-import android.widget.Toast;
-
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
-import com.laundry.laundry.adapter.OrderRecyclerViewAdapter;
-import com.laundry.laundry.database.DatabaseOrder;
-import com.laundry.laundry.model.Order;
 
-import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -21,11 +12,6 @@ import androidx.navigation.ui.NavigationUI;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 

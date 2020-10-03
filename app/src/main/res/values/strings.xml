@@ -17,10 +17,20 @@
     <string name="addOrder">Tambah Order</string>
     <string name="updateOrder">Edit Order</string>
 
-    <string name="jumlah">Jumlah Pakaian</string>
-    <string name="berat">Berat Total</string>
-    <string name="layanan">Jenis Layanan</string>
-    <string name="date">Tanggal Masuk</string>
+    <!--HINT FIELD-->
+    <string name="jumlah">Jumlah pakaian dalam satuan</string>
+    <string name="berat">Berat total dalam kilogram</string>
+    <string name="layanan">Jenis layanan</string>
+    <string name="layanan_reguler">Reguler</string>
+    <string name="layanan_kilat">Kilat</string>
+
+    <!--LABEL ITEM ORDER-->
+    <string name="lbl_no_id">No ID</string>
+    <string name="lbl_tgl_masuk">Tanggal Masuk</string>
+    <string name="lbl_jml_pakaian">Jumlah Pakaian</string>
+    <string name="lbl_berat">Berat Total</string>
+    <string name="lbl_layanan">Jenis Layanan</string>
+    <string name="lbl_style">:</string>
 
     <string name="cancel">BATAL</string>
     <string name="add">TAMBAH</string>

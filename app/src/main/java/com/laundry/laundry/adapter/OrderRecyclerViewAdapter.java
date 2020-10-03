@@ -9,22 +9,17 @@ import android.widget.Filter;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.laundry.laundry.MainActivity;
 import com.laundry.laundry.R;
 import com.laundry.laundry.UpdateFragment;
 import com.laundry.laundry.model.Order;
-import com.laundry.laundry.ui.home.HomeFragment;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class OrderRecyclerViewAdapter extends RecyclerView.Adapter<OrderRecyclerViewAdapter.UserViewHolder> {
+public class OrderRecyclerViewAdapter extends RecyclerView.Adapter<OrderRecyclerViewAdapter.UserViewHolder>{
     private Context context;
     private Order order;
     private List<Order> orderList;
@@ -48,9 +43,10 @@ public class OrderRecyclerViewAdapter extends RecyclerView.Adapter<OrderRecycler
     public void onBindViewHolder(@NonNull OrderRecyclerViewAdapter.UserViewHolder holder, int position) {
         order = orderList.get(position);
         holder.viewId.setText(order.getStringId());
-        holder.viewJP.setText(order.getStringJumlah_pakaian());
-        holder.viewBerat.setText(order.getStringBerat());
+        holder.viewJP.setText(order.getStringJumlah_pakaian()+" buah");
+        holder.viewBerat.setText(order.getStringBerat()+" kg");
         holder.viewLayanan.setText(order.getLayanan());
+        holder.viewTgl_Masuk.setText(order.getTanggal_masuk());
     }
 
     @Override
@@ -59,7 +55,7 @@ public class OrderRecyclerViewAdapter extends RecyclerView.Adapter<OrderRecycler
     public Filter getFilter() { return filterOrder; }
 
     public class UserViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView viewId, viewJP, viewBerat, viewLayanan;
+        TextView viewId, viewJP, viewBerat, viewLayanan, viewTgl_Masuk;
 
         public UserViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -67,20 +63,19 @@ public class OrderRecyclerViewAdapter extends RecyclerView.Adapter<OrderRecycler
             viewJP = itemView.findViewById(R.id.jumlah_pakaian);
             viewBerat = itemView.findViewById(R.id.berat);
             viewLayanan = itemView.findViewById(R.id.layanan);
+            viewTgl_Masuk = itemView.findViewById(R.id.tanggal_masuk);
             itemView.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
             AppCompatActivity activity = (AppCompatActivity) v.getContext();
-
             Bundle data = new Bundle();
             Order order = orderList.get(getAdapterPosition());
             data.putSerializable("order", order);
             UpdateFragment updateFragment = new UpdateFragment();
             updateFragment.setArguments(data);
 
-            context.getApplicationContext();
             activity.getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.frame_layout, updateFragment)
@@ -88,8 +83,8 @@ public class OrderRecyclerViewAdapter extends RecyclerView.Adapter<OrderRecycler
         }
     }
 
+    //Menmfilter order berdasarkan id yang dimasukkan
     private Filter filterOrder = new Filter() {
-
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
             List<Order> filteredList = new ArrayList<>();
@@ -112,6 +107,7 @@ public class OrderRecyclerViewAdapter extends RecyclerView.Adapter<OrderRecycler
             return results;
         }
 
+        //Menampilkan daftar order dengan id order yang dimasukkan
         @SuppressWarnings("unchecked")
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {

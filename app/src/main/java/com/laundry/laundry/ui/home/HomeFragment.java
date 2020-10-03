@@ -48,7 +48,6 @@ public class HomeFragment extends Fragment {
         recyclerView = root.findViewById(R.id.order_rv);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-
         refreshLayout = root.findViewById(R.id.swipe_refresh);
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -65,6 +64,7 @@ public class HomeFragment extends Fragment {
         return root;
     }
 
+    //Method untuk menuju AddFragment, untuk memasukkan order baru
     private void addOrders(View view) {
         fabAdd = view.findViewById(R.id.fab);
         fabAdd.setOnClickListener(new View.OnClickListener() {
@@ -76,6 +76,7 @@ public class HomeFragment extends Fragment {
         });
     }
 
+    //Method untuk mendapatkan seluruh daftar order
     private void getOrders() {
         class GetOrders extends AsyncTask<Void, Void, List<Order>> {
 
@@ -103,6 +104,7 @@ public class HomeFragment extends Fragment {
         get.execute();
     }
 
+    //Method untuk melakukan pencarian
     private void search(View root) {
         find = root.findViewById(R.id.search_view);
         find.setOnQueryTextListener(new SearchView.OnQueryTextListener() {

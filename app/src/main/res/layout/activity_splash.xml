@@ -10,8 +10,8 @@
     android:background="@drawable/wallpapersplash">
 
     <ImageView
-        android:layout_width="300dp"
-        android:layout_height="300dp"
+        android:layout_width="260dp"
+        android:layout_height="260dp"
         app:srcCompat="@drawable/logo"/>
 
 </LinearLayout>

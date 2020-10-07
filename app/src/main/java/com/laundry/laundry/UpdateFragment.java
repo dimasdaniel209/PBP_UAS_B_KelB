@@ -72,19 +72,21 @@ public class UpdateFragment extends Fragment {
         }
 
         RadioGroup radioGroup = view.findViewById(R.id.radioGroup_layanan);
+
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
                 switch (i){
-                    case R.id.radio_reguler:
-                        RadioButton radioReg = view.findViewById(R.id.radio_reguler);
+                    case R.id.radio_edit_reguler:
+                        RadioButton radioReg = view.findViewById(R.id.radio_edit_reguler);
                         layanan = radioReg.getText().toString();
                         break;
-                    case R.id.radio_kilat:
-                        RadioButton radioKil = view.findViewById(R.id.radio_kilat);
+                    case R.id.radio_edit_kilat:
+                        RadioButton radioKil = view.findViewById(R.id.radio_edit_kilat);
                         layanan = radioKil.getText().toString();
                         break;
                 }
+
             }
         });
 
@@ -115,11 +117,7 @@ public class UpdateFragment extends Fragment {
                     edtJumlah.setError("Silakan diisi dengan benar");}
                 if(tempBerat.isEmpty()){
                     edtBerat.setError("Silakan diisi dengan benar");}
-                if (layanan.length()==0){
-                    Toast.makeText(getActivity().getApplicationContext(),
-                            "Silakan pilih layanan", Toast.LENGTH_SHORT).show();
-                }
-                if(!tempJumlah.isEmpty() && !tempBerat.isEmpty() && layanan.length()>0) {
+                if(!tempJumlah.isEmpty() && !tempBerat.isEmpty()) {
                     jumlah = Integer.parseInt(tempJumlah);
                     berat = Double.parseDouble(tempBerat);
 

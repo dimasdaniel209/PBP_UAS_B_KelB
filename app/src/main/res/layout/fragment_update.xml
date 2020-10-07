@@ -12,7 +12,7 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:orientation="vertical"
-        android:background="@android:color/white"
+        android:background="#BDF2FF"
         android:padding="16dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -25,38 +25,71 @@
             android:textAlignment="center"
             android:text="@string/updateOrder" />
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_marginTop="16dp"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edit_jumlah"
+            android:orientation="horizontal"
+            android:layout_marginTop="16dp">
+            <TextView
+                style="@style/TextAppearance.MaterialComponents.Subtitle1"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="@={order.stringJumlah_pakaian}"
-                android:autofillHints=""
-                android:hint="@string/jumlah"
-                android:inputType="text" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:layout_height="wrap_content"
+                android:text="@string/lbl_jml_pakaian"
+                android:layout_weight="1"
+                android:layout_marginRight="4dp"/>
+            <TextView
+                style="@style/TextAppearance.MaterialComponents.Subtitle1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/lbl_berat"
+                android:layout_weight="1"
+                android:layout_marginLeft="4dp"/>
+        </LinearLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_marginTop="16dp"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edit_berat"
+            android:orientation="horizontal">
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="@={order.stringBerat}"
-                android:autofillHints=""
-                android:hint="@string/berat"
-                android:inputType="text" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
 
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edit_jumlah"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="@={order.stringJumlah_pakaian}"
+                    android:autofillHints=""
+                    android:hint="@string/jumlah"
+                    android:inputType="text" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginLeft="4dp"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edit_berat"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="@={order.stringBerat}"
+                    android:autofillHints=""
+                    android:hint="@string/berat"
+                    android:inputType="text" />
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+
+        <TextView
+            style="@style/TextAppearance.MaterialComponents.Subtitle1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/layanan"
+            android:layout_marginTop="16dp"/>
         <RadioGroup
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

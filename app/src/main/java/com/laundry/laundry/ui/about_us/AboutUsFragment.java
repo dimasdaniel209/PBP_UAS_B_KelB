@@ -1,4 +1,4 @@
-package com.laundry.laundry.ui.gallery;
+package com.laundry.laundry.ui.about_us;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,17 +14,17 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.laundry.laundry.R;
 
-public class GalleryFragment extends Fragment {
+public class AboutUsFragment extends Fragment {
 
-    private GalleryViewModel galleryViewModel;
+    private AboutUsViewModel aboutUsViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        galleryViewModel =
-                ViewModelProviders.of(this).get(GalleryViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_gallery, container, false);
-        final TextView textView = root.findViewById(R.id.text_gallery);
-        galleryViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
+        aboutUsViewModel =
+                ViewModelProviders.of(this).get(AboutUsViewModel.class);
+        View root = inflater.inflate(R.layout.fragment_aboutus, container, false);
+        final TextView textView = root.findViewById(R.id.text_aboutus);
+        aboutUsViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
                 textView.setText(s);

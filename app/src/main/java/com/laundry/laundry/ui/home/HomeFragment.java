@@ -85,7 +85,7 @@ public class HomeFragment extends Fragment {
                 List<Order> orderList = DatabaseOrder
                         .getInstance(getActivity().getApplicationContext())
                         .getDatabase()
-                        .userDao()
+                        .orderDao()
                         .getAll();
                 return orderList;
             }

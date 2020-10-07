@@ -172,7 +172,7 @@ public class UpdateFragment extends Fragment {
             @Override
             protected Void doInBackground(Void... voids) {
                 DatabaseOrder.getInstance(getActivity().getApplicationContext()).getDatabase()
-                        .userDao()
+                        .orderDao()
                         .update(order);
                 return null;
             }
@@ -196,7 +196,7 @@ public class UpdateFragment extends Fragment {
             @Override
             protected Void doInBackground(Void... voids) {
                 DatabaseOrder.getInstance(getActivity().getApplicationContext()).getDatabase()
-                        .userDao()
+                        .orderDao()
                         .delete(order);
                 return null;
             }
@@ -209,6 +209,8 @@ public class UpdateFragment extends Fragment {
                 fragmentTransaction.hide(UpdateFragment.this).commit();
             }
         }
+        DeletOrder deletOrder = new DeletOrder();
+        deletOrder.execute();
     }
 }
 

@@ -125,7 +125,7 @@ public class AddFragment extends Fragment {
 
                 DatabaseOrder.getInstance(getContext())
                         .getDatabase()
-                        .userDao()
+                        .orderDao()
                         .insert(order);
                 return null;
             }

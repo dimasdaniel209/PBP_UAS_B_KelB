@@ -1,4 +1,4 @@
-package com.laundry.laundry;
+package com.laundry.laundry.ui.home;
 
 import android.content.DialogInterface;
 import android.os.AsyncTask;
@@ -19,6 +19,7 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
+import com.laundry.laundry.R;
 import com.laundry.laundry.database.DatabaseOrder;
 import com.laundry.laundry.model.Order;
 

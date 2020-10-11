@@ -147,10 +147,10 @@
         </LinearLayout>
 
         <View
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="#B3B2B2"/>
+            android:background="@color/colorAccent"/>
 
     </LinearLayout>
 </layout>

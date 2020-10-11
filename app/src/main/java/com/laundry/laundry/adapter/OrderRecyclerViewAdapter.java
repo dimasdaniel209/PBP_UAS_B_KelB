@@ -13,7 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.laundry.laundry.R;
-import com.laundry.laundry.UpdateFragment;
+import com.laundry.laundry.ui.home.UpdateFragment;
 import com.laundry.laundry.model.Order;
 
 import java.util.ArrayList;

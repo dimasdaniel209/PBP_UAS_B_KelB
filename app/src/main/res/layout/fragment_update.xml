@@ -6,7 +6,7 @@
             type="com.laundry.laundry.model.Order" />
         <variable
             name="frag"
-            type="com.laundry.laundry.UpdateFragment" />
+            type="com.laundry.laundry.ui.home.UpdateFragment" />
     </data>
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -16,7 +16,7 @@
         android:padding="16dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".UpdateFragment">
+        tools:context=".ui.home.UpdateFragment">
 
         <com.google.android.material.textview.MaterialTextView
             android:layout_width="match_parent"

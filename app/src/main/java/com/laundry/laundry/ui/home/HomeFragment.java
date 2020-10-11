@@ -17,7 +17,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.laundry.laundry.AddFragment;
 import com.laundry.laundry.R;
 import com.laundry.laundry.adapter.OrderRecyclerViewAdapter;
 import com.laundry.laundry.database.DatabaseOrder;

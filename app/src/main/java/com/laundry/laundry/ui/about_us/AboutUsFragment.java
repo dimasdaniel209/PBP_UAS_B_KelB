@@ -1,35 +1,36 @@
 package com.laundry.laundry.ui.about_us;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.laundry.laundry.R;
 
 public class AboutUsFragment extends Fragment {
 
-    private AboutUsViewModel aboutUsViewModel;
+    Button show;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        aboutUsViewModel =
-                ViewModelProviders.of(this).get(AboutUsViewModel.class);
         View root = inflater.inflate(R.layout.fragment_aboutus, container, false);
-        final TextView textView = root.findViewById(R.id.text_aboutus);
-        aboutUsViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
+
+        show = (Button) root.findViewById(R.id.show);
+
+        show.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
+            public void onClick(View view) {
+                Intent i = new Intent(getActivity(),ShowMapActivity.class);
+                startActivity(i);
             }
         });
+
         return root;
     }
 }

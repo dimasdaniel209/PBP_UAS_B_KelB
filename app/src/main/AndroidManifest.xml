@@ -36,6 +36,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <service android:name=".MessagingActivity">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
         <activity
             android:name=".LoginActivity"
             android:configChanges="orientation|screenSize|screenLayout|keyboardHidden" />

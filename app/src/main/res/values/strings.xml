@@ -52,7 +52,13 @@
     <string name="save">SIMPAN</string>
     <string name="delete">DELETE</string>
 
+    <!--USER-->
+    <string name="namaUser">Nama Lengkap</string>
+    <string name="alamatUser">Alamat Lengkap</string>
+
     <string name="startnav">START NAVIGATION</string>
+    <string name="editProfile">EDIT PROFILE</string>
+    <string name="updateProfile">UPDATE PROFILE</string>
 
     <string name="mapbox_access_token">pk.eyJ1IjoiY3VwYW5nbGF1bmRyeSIsImEiOiJja2czcDkzYW4wY3VvMndubmczNDlvNjVqIn0.wspKQPW-AH_ep2IcEDjxyQ</string>
     <!-- TODO: Remove or change this placeholder text -->

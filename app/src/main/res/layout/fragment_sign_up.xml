@@ -98,8 +98,14 @@
                 android:layout_height="match_parent"
                 android:text="@string/signUp"
                 android:layout_marginTop="20dp"/>
-
         </LinearLayout>
     </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/signUpProgressBar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:indeterminateTint="@color/colorPrimaryDark"
+        android:visibility="gone"/>
 
 </FrameLayout>

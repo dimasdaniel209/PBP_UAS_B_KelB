@@ -2,12 +2,12 @@ package com.laundry.laundry.ui.profile;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -15,7 +15,13 @@ import androidx.fragment.app.Fragment;
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.laundry.laundry.R;
+import com.laundry.laundry.model.User;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -25,7 +31,11 @@ public class ProfileFragment extends Fragment {
 
     CircleImageView profileImageView;
     private Button btnEditProfile;
-    TextView displayNameText;
+    TextView displayNameText, displayAlamatText;
+
+    private FirebaseUser firebaseUser;
+    private FirebaseAuth firebaseAuth;
+    private DatabaseReference databaseReference;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -33,18 +43,31 @@ public class ProfileFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_profile, container, false);
 
         profileImageView = root.findViewById(R.id.profileImageView);
-        displayNameText = root.findViewById(R.id.displayNameEditText);
+        displayNameText = root.findViewById(R.id.displayNameText);
+        displayAlamatText = root.findViewById(R.id.displayAlamatText);
 
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
 
-        if(user != null){
-            Log.d(TAG, "onCreate" + user.getDisplayName());
-            if(user.getDisplayName() != null){
-                displayNameText.setText(user.getDisplayName());
-            }
-            if(user.getPhotoUrl() != null){
+        if(firebaseUser != null){
+            databaseReference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    User user = snapshot.getValue(User.class);
+                    assert user != null;
+                    displayNameText.setText(user.getNama());
+                    displayAlamatText.setText(user.getAlamat());
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Toast.makeText(getActivity(),error.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            });
+            if(firebaseUser.getPhotoUrl() != null){
                 Glide.with(this)
-                        .load(user.getPhotoUrl())
+                        .load(firebaseUser.getPhotoUrl())
                         .into(profileImageView);
             }
         }

@@ -17,13 +17,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 import java.util.regex.Pattern;
 
@@ -34,6 +34,7 @@ public class SignInFragment extends Fragment {
     Button signInBtn;
     EditText edtEmail, edtPassword;
     FirebaseAuth firebaseAuth;
+    ProgressBar progressBar;
 
     public SignInFragment() {
         // Required empty public constructor
@@ -49,6 +50,8 @@ public class SignInFragment extends Fragment {
         firebaseAuth = FirebaseAuth.getInstance();
 
         signInBtn = root.findViewById(R.id.btnSignIn);
+
+        progressBar = root.findViewById(R.id.signInProgressBar);
 
         authStateListener = new FirebaseAuth.AuthStateListener() {
             com.google.firebase.auth.FirebaseUser FirebaseUser = firebaseAuth.getCurrentUser();
@@ -76,6 +79,7 @@ public class SignInFragment extends Fragment {
                 }else if(edtPassword.getText().toString().length()<6){
                     Toast.makeText(getActivity().getApplicationContext(), "Password too short", Toast.LENGTH_SHORT).show();
                 }else{
+                    progressBar.setVisibility(View.VISIBLE);
                     String email = edtEmail.getText().toString();
                     String password = edtPassword.getText().toString();
                     firebaseAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
@@ -83,6 +87,7 @@ public class SignInFragment extends Fragment {
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if(!task.isSuccessful()) {
                                 Toast.makeText(getActivity().getApplicationContext(), "SignIn Failed", Toast.LENGTH_SHORT).show();
+                                progressBar.setVisibility(View.GONE);
                             }else{
                                 Toast.makeText(getActivity().getApplicationContext(), "Sign In Successfull", Toast.LENGTH_SHORT).show();
                                 createNotificationChannel();

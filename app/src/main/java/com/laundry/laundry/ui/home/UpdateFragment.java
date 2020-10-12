@@ -35,6 +35,8 @@ public class UpdateFragment extends Fragment {
     Order order;
     Integer jumlah;
     double berat;
+    RadioGroup radioGroup;
+    RadioButton radioReg, radioKil;
 
     String formattedDate;
 
@@ -51,45 +53,47 @@ public class UpdateFragment extends Fragment {
         edtJumlah = view.findViewById(R.id.edit_jumlah);
         edtBerat = view.findViewById(R.id.edit_berat);
 
+        radioGroup = view.findViewById(R.id.radioGroupUpdate_layanan);
+
         try {
             if((order.getStringId() != null) && (order.getStringJumlah_pakaian() != null) &&
                     (order.getStringBerat() != null) && (order.getLayanan() != null)) {
                 edtJumlah.setText(order.getStringJumlah_pakaian());
                 edtBerat.setText(order.getStringBerat());
 
+                radioReg = view.findViewById(R.id.radio_edit_reguler);
+                radioKil = view.findViewById(R.id.radio_edit_kilat);
+
                 if (order.getLayanan().equals("Reguler")){
-                    RadioButton radioReg = view.findViewById(R.id.radio_edit_reguler);
                     radioReg.setChecked(true);
+                    layanan = radioReg.getText().toString();
                 }else{
-                    RadioButton radioKil = view.findViewById(R.id.radio_edit_kilat);
                     radioKil.setChecked(true);
+                    layanan = radioKil.getText().toString();
                 }
 
-                RadioGroup radioGroup = view.findViewById(R.id.radioGroup_layanan);
-
-                radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(RadioGroup radioGroup, int i) {
-                        switch (i){
-                            case R.id.radio_edit_reguler:
-                                RadioButton radioReg = view.findViewById(R.id.radio_edit_reguler);
-                                layanan = radioReg.getText().toString();
-                                break;
-                            case R.id.radio_edit_kilat:
-                                RadioButton radioKil = view.findViewById(R.id.radio_edit_kilat);
-                                layanan = radioKil.getText().toString();
-                                break;
-                        }
-
-                    }
-                });
             } else {
-                edtJumlah.setText("-");
-                edtBerat.setText("-");
+                edtJumlah.setText("");
+                edtBerat.setText("");
             }
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                switch (i){
+                    case R.id.radio_edit_reguler:
+                        layanan = radioReg.getText().toString();
+                        break;
+                    case R.id.radio_edit_kilat:
+                        layanan = radioKil.getText().toString();
+                        break;
+                }
+
+            }
+        });
 
         cancelBtn = view.findViewById(R.id.btnCancel);
         saveBtn = view.findViewById(R.id.btnSave);
@@ -107,9 +111,7 @@ public class UpdateFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 tempJumlah = edtJumlah.getText().toString();
-                jumlah = Integer.parseInt(tempJumlah);
                 tempBerat = edtBerat.getText().toString();
-                berat = Double.parseDouble(tempBerat);
 
                 Date currentTime = Calendar.getInstance().getTime();
                 formattedDate = DateFormat.getDateInstance().format(currentTime);
@@ -128,6 +130,8 @@ public class UpdateFragment extends Fragment {
                     order.setTanggal_masuk(formattedDate);
 
                     update(order);
+                } else {
+                    Toast.makeText(getActivity().getApplicationContext(),"Update order failed", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -198,13 +202,13 @@ public class UpdateFragment extends Fragment {
                 fragmentTransaction.hide(UpdateFragment.this).commit();
             }
         }
-        UpdateOrder updateUser = new UpdateOrder();
-        updateUser.execute();
+        UpdateOrder updateOrder = new UpdateOrder();
+        updateOrder.execute();
     }
 
     //Method untuk menhapus order dari database
     private void delete(final Order order) {
-        class DeletOrder extends AsyncTask<Void, Void, Void> {
+        class DeleteOrder extends AsyncTask<Void, Void, Void> {
 
             @Override
             protected Void doInBackground(Void... voids) {
@@ -228,8 +232,8 @@ public class UpdateFragment extends Fragment {
                 fragmentTransaction.hide(UpdateFragment.this).commit();
             }
         }
-        DeletOrder deletOrder = new DeletOrder();
-        deletOrder.execute();
+        DeleteOrder deleteOrder = new DeleteOrder();
+        deleteOrder.execute();
     }
 }
 

@@ -12,7 +12,7 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:orientation="vertical"
-        android:background="#BDF2FF"
+        android:background="@drawable/wphome"
         android:padding="16dp"
         android:id="@+id/add_layout_ver"
         android:layout_width="match_parent"
@@ -64,7 +64,7 @@
                     android:layout_height="match_parent"
                     android:autofillHints=""
                     android:hint="@string/jumlah"
-                    android:inputType="text"
+                    android:inputType="number"
                     android:text="@={order.stringJumlah_pakaian}"/>
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -81,7 +81,7 @@
                     android:layout_height="match_parent"
                     android:autofillHints=""
                     android:hint="@string/berat"
-                    android:inputType="text"
+                    android:inputType="numberDecimal"
                     android:text="@={order.stringBerat}"/>
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>

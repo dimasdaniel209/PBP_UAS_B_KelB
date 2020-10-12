@@ -50,8 +50,6 @@ public class EditProfileActivity extends AppCompatActivity {
     Button updateProfileButton;
 
     String name, address;
-    String DISPLAY_NAME = null;
-    String PROFILE_IMAGE_URL = null;
     int TAKE_IMAGE_CODE = 10001;
 
     private FirebaseUser firebaseUser;
@@ -125,7 +123,7 @@ public class EditProfileActivity extends AppCompatActivity {
             }
         });
 
-        Slidr.attach(this);
+        Slidr.attach(this); //Swipe untuk back
     }
 
     public void handleImageClick(View view) {

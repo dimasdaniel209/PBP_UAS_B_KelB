@@ -64,6 +64,25 @@ public class UpdateFragment extends Fragment {
                     RadioButton radioKil = view.findViewById(R.id.radio_edit_kilat);
                     radioKil.setChecked(true);
                 }
+
+                RadioGroup radioGroup = view.findViewById(R.id.radioGroup_layanan);
+
+                radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                        switch (i){
+                            case R.id.radio_edit_reguler:
+                                RadioButton radioReg = view.findViewById(R.id.radio_edit_reguler);
+                                layanan = radioReg.getText().toString();
+                                break;
+                            case R.id.radio_edit_kilat:
+                                RadioButton radioKil = view.findViewById(R.id.radio_edit_kilat);
+                                layanan = radioKil.getText().toString();
+                                break;
+                        }
+
+                    }
+                });
             } else {
                 edtJumlah.setText("-");
                 edtBerat.setText("-");
@@ -71,25 +90,6 @@ public class UpdateFragment extends Fragment {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-
-        RadioGroup radioGroup = view.findViewById(R.id.radioGroup_layanan);
-
-        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup radioGroup, int i) {
-                switch (i){
-                    case R.id.radio_edit_reguler:
-                        RadioButton radioReg = view.findViewById(R.id.radio_edit_reguler);
-                        layanan = radioReg.getText().toString();
-                        break;
-                    case R.id.radio_edit_kilat:
-                        RadioButton radioKil = view.findViewById(R.id.radio_edit_kilat);
-                        layanan = radioKil.getText().toString();
-                        break;
-                }
-
-            }
-        });
 
         cancelBtn = view.findViewById(R.id.btnCancel);
         saveBtn = view.findViewById(R.id.btnSave);
@@ -115,9 +115,9 @@ public class UpdateFragment extends Fragment {
                 formattedDate = DateFormat.getDateInstance().format(currentTime);
 
                 if(tempJumlah.isEmpty()){
-                    edtJumlah.setError("Silakan diisi dengan benar");}
+                    edtJumlah.setError("Please fill Correctly");}
                 if(tempBerat.isEmpty()){
-                    edtBerat.setError("Silakan diisi dengan benar");}
+                    edtBerat.setError("Please fill Correctly");}
                 if(!tempJumlah.isEmpty() && !tempBerat.isEmpty()) {
                     jumlah = Integer.parseInt(tempJumlah);
                     berat = Double.parseDouble(tempBerat);
@@ -160,7 +160,13 @@ public class UpdateFragment extends Fragment {
         cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction()
+                        .setCustomAnimations(
+                                R.anim.slide_in,  // enter
+                                R.anim.fade_out,  // exit
+                                R.anim.fade_in,   // popEnter
+                                R.anim.slide_out // popExit
+                        );
                 fragmentTransaction.hide(UpdateFragment.this).commit();
             }
         });
@@ -182,7 +188,13 @@ public class UpdateFragment extends Fragment {
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
                 Toast.makeText(getActivity().getApplicationContext(),"Order updated",Toast.LENGTH_SHORT).show();
-                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction()
+                        .setCustomAnimations(
+                                R.anim.slide_in,  // enter
+                                R.anim.fade_out,  // exit
+                                R.anim.fade_in,   // popEnter
+                                R.anim.slide_out // popExit
+                        );
                 fragmentTransaction.hide(UpdateFragment.this).commit();
             }
         }
@@ -206,7 +218,13 @@ public class UpdateFragment extends Fragment {
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
                 Toast.makeText(getActivity().getApplicationContext(), "Order deleted", Toast.LENGTH_SHORT).show();
-                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction()
+                        .setCustomAnimations(
+                                R.anim.slide_in,  // enter
+                                R.anim.fade_out,  // exit
+                                R.anim.fade_in,   // popEnter
+                                R.anim.slide_out // popExit
+                        );
                 fragmentTransaction.hide(UpdateFragment.this).commit();
             }
         }

@@ -28,9 +28,7 @@ import java.util.regex.Pattern;
 
 public class SignUpFragment extends Fragment {
 
-    private FirebaseAuth.AuthStateListener authStateListener;
     FirebaseAuth mFirebaseAuth;
-    FirebaseDatabase firebaseDatabase;
     Button signUpBtn;
     TextInputEditText edtNama, edtEmail, edtPassword, edtAlamat;
     FirebaseAuth firebaseAuth;
@@ -67,17 +65,13 @@ public class SignUpFragment extends Fragment {
                 final String email_input = edtEmail.getText().toString();
                 final String password_input = edtPassword.getText().toString();
 
-                if(edtEmail.getText().toString().equalsIgnoreCase("")){
+                if(edtEmail.getText().toString().equalsIgnoreCase("") || !isValidEmailId(edtEmail.getText().toString().trim())){
                     Toast.makeText(getActivity().getApplicationContext(),"Email Invalid",Toast.LENGTH_SHORT).show();
                 }else if(edtPassword.getText().toString().equalsIgnoreCase("")){
                     Toast.makeText(getActivity().getApplicationContext(),"Please Enter Password",Toast.LENGTH_SHORT).show();
-                }else if(!isValidEmailId(edtEmail.getText().toString().trim())){
-                    Toast.makeText(getActivity().getApplicationContext(), "Email Invalid", Toast.LENGTH_SHORT).show();
                 }else if(edtPassword.getText().toString().length()<6){
                     Toast.makeText(getActivity().getApplicationContext(), "Password too short", Toast.LENGTH_SHORT).show();
                 }else{
-                    Toast.makeText(getActivity().getApplicationContext(), "Sukses", Toast.LENGTH_SHORT).show();
-
                     register(nama_input,alamat_input,email_input,password_input);
                 }
             }
@@ -94,6 +88,7 @@ public class SignUpFragment extends Fragment {
                 if(task.isSuccessful()) {
                     Toast.makeText(getActivity().getApplicationContext(), "Authentication Successful", Toast.LENGTH_SHORT).show();
 
+//                  Memasukkan Data user ke dalam Database Firebase
                     FirebaseUser rUser = mFirebaseAuth.getCurrentUser();
 
                     assert rUser != null;
@@ -115,7 +110,13 @@ public class SignUpFragment extends Fragment {
 
                                 progressBar.setVisibility(View.GONE);
 
-                                FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+                                FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction()
+                                        .setCustomAnimations(
+                                                R.anim.slide_in,  // enter
+                                                R.anim.fade_out,  // exit
+                                                R.anim.fade_in,   // popEnter
+                                                R.anim.slide_out // popExit
+                                        );
                                 fragmentTransaction.replace(R.id.signUp_layout, new SignInFragment()).addToBackStack(null).commit();
                             }
                             else {
@@ -131,6 +132,7 @@ public class SignUpFragment extends Fragment {
         });
     }
 
+    //Validasi pattern dari email
     private boolean isValidEmailId(String email){
         return Pattern.compile("^(([\\w-]+\\.)+[\\w-]+|([a-zA-Z]{1}|[\\w-]{2,}))@"
                 + "((([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\.([0-1]?"

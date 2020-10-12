@@ -70,12 +70,10 @@ public class SignInFragment extends Fragment {
         signInBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(edtEmail.getText().toString().equalsIgnoreCase("")){
+                if(edtEmail.getText().toString().equalsIgnoreCase("") || !isValidEmailId(edtEmail.getText().toString().trim())){
                     Toast.makeText(getActivity().getApplicationContext(),"Email Invalid",Toast.LENGTH_SHORT).show();
                 }else if(edtPassword.getText().toString().equalsIgnoreCase("")){
                     Toast.makeText(getActivity().getApplicationContext(),"Please Enter Password",Toast.LENGTH_SHORT).show();
-                }else if(!isValidEmailId(edtEmail.getText().toString().trim())){
-                    Toast.makeText(getActivity().getApplicationContext(), "Email Invalid", Toast.LENGTH_SHORT).show();
                 }else if(edtPassword.getText().toString().length()<6){
                     Toast.makeText(getActivity().getApplicationContext(), "Password too short", Toast.LENGTH_SHORT).show();
                 }else{
@@ -103,6 +101,7 @@ public class SignInFragment extends Fragment {
         return root;
     }
 
+    //Melakukan build notifikasi
     private void createNotificationChannel(){
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
             CharSequence name = "Channel 1";
@@ -115,6 +114,7 @@ public class SignInFragment extends Fragment {
         }
     }
 
+    //Membuat notifikasi saat pengguna masuk ke aplikasi
     private void addNotification(){
         NotificationCompat.Builder builder = new NotificationCompat.Builder(getActivity().getApplicationContext(),CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_launcher_background)
@@ -130,6 +130,7 @@ public class SignInFragment extends Fragment {
         manager.notify(0,builder.build());
     }
 
+    //Validasi pattern email
     private boolean isValidEmailId(String email){
         return Pattern.compile("^(([\\w-]+\\.)+[\\w-]+|([a-zA-Z]{1}|[\\w-]{2,}))@"
                 + "((([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\.([0-1]?"

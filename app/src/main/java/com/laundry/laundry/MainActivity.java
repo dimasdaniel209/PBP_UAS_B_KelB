@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
+        //Membuat Notifikasi
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
             String CHANNEL_ID = "Channel 1";
             CharSequence name = "Channel 1";

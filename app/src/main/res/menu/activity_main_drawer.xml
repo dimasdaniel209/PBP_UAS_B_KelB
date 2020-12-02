@@ -8,6 +8,17 @@
             android:id="@+id/nav_home"
             android:icon="@drawable/ic_baseline_local_laundry_service_24"
             android:title="@string/menu_home" />
+
+        <item
+            android:id="@+id/nav_setrika"
+            android:icon="@drawable/ic_setrika"
+            android:title="Setrika" />
+
+        <item
+            android:id="@+id/nav_sepatu"
+            android:icon="@drawable/ic_sepatu"
+            android:title="Sepatu" />
+
         <item
             android:id="@+id/nav_aboutus"
             android:icon="@drawable/ic_baseline_info_24"

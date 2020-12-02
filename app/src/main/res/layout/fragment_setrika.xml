@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/frame_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.home.HomeFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.setrika.SetrikaFragment">
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -17,7 +16,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
-            android:text="@string/title_home"
+            android:text="Order Setrika"
             android:textAlignment="center"
             style="@style/TextAppearance.MaterialComponents.Headline4"
             app:layout_constraintEnd_toEndOf="parent"
@@ -45,7 +44,7 @@
             app:layout_constraintStart_toStartOf="@+id/textView"
             app:layout_constraintTop_toBottomOf="@+id/search_view">
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/order_rv"
+                android:id="@+id/setrika_rv"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 tools:listitem="@layout/item_order"/>
@@ -66,4 +65,5 @@
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </FrameLayout>

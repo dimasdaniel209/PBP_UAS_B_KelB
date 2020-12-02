@@ -15,7 +15,9 @@
     <string name="alamat"> Jalan Babarsari, Jl. Janti, Janti, Caturtunggal, Kec. Depok, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55281</string>
     <string name="showinmap">Show in Map</string>
 
-    <string name="menu_home">Home</string>
+    <string name="menu_home">Laundry</string>
+    <string name="menu_setrika">Setrika</string>
+    <string name="menu_sepatu">Sepatu</string>
     <string name="menu_aboutus">About Us</string>
     <string name="menu_profile">Profile</string>
 

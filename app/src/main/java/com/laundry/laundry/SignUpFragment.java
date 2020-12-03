@@ -22,6 +22,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.regex.Pattern;
@@ -102,6 +104,7 @@ public class SignUpFragment extends Fragment {
                     hashMap.put("nama",nama_input);
                     hashMap.put("alamat",alamat_input);
                     hashMap.put("email",email_input);
+                    hashMap.put("password",computedMD5Hash(edtPassword.getText().toString()).toString());
 
                     firebaseAuth.getCurrentUser().sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
@@ -150,5 +153,26 @@ public class SignUpFragment extends Fragment {
                 + "([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\.([0-1]?"
                 + "[0-9]{1,2}|25[0-5]|2[0-4][0-9])){1}|"
                 + "([a-zA-Z]+[\\w-]+\\.)+[a-zA-Z]{2,4})$").matcher(email).matches();
+    }
+
+    public StringBuffer computedMD5Hash(String password){
+        try {
+            MessageDigest digest = java.security.MessageDigest.getInstance("MD5");
+            digest.update(password.getBytes());
+            byte messageDiggest[] = digest.digest();
+
+            StringBuffer MD5Hash = new StringBuffer();
+            for(int i=0; i< messageDiggest.length;i++){
+                String h = Integer.toHexString(0xFF & messageDiggest[i]);
+                while (h.length() < 2)
+                    h = "0" + h;
+                MD5Hash.append(h);
+            }
+
+            return MD5Hash;
+        }catch (NoSuchAlgorithmException e){
+            e.printStackTrace();
+        }
+        return null;
     }
 }

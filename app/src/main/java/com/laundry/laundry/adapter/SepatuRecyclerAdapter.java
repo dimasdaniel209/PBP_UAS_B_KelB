@@ -1,6 +1,7 @@
 package com.laundry.laundry.adapter;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,10 +11,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.laundry.laundry.R;
 import com.laundry.laundry.database.SepatuDAO;
+import com.laundry.laundry.ui.sepatu.DetailSepatu;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +25,7 @@ import java.util.List;
 public class SepatuRecyclerAdapter extends RecyclerView.Adapter<SepatuRecyclerAdapter.RoomViewHolder> implements Filterable {
     private List<SepatuDAO> dataList;
     private List<SepatuDAO> filteredDataList;
-    private Context context;
+    private Context context, context2;
 
     public SepatuRecyclerAdapter(Context context, List<SepatuDAO> dataList){
         this.context = context;
@@ -32,6 +36,7 @@ public class SepatuRecyclerAdapter extends RecyclerView.Adapter<SepatuRecyclerAd
     @NonNull
     @Override
     public SepatuRecyclerAdapter.RoomViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        context2 = parent.getContext();
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
         View view = layoutInflater.inflate(R.layout.recycler_adapter_sepatu, parent, false);
         return new SepatuRecyclerAdapter.RoomViewHolder(view);
@@ -48,13 +53,13 @@ public class SepatuRecyclerAdapter extends RecyclerView.Adapter<SepatuRecyclerAd
         holder.mParent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                FragmentManager manager = ((AppCompatActivity) context).getSupportFragmentManager();
-//                DetailUserFragment dialog = new DetailUserFragment();
-//                dialog.show(manager, "dialog");
-//
-//                Bundle args = new Bundle();
-//                args.putString("id", brg.getId());
-//                dialog.setArguments(args);
+                FragmentManager manager = ((AppCompatActivity) context2).getSupportFragmentManager();
+                DetailSepatu dialog = new DetailSepatu();
+                dialog.show(manager, "dialog");
+
+                Bundle args = new Bundle();
+                args.putString("id", brg.getId());
+                dialog.setArguments(args);
             }
         });
     }
@@ -74,7 +79,7 @@ public class SepatuRecyclerAdapter extends RecyclerView.Adapter<SepatuRecyclerAd
             tvLayanan = itemView.findViewById(R.id.tvLayananSepatu);
             tvKondisi = itemView.findViewById(R.id.tvKondisiSepatu);
             tvJenis = itemView.findViewById(R.id.tvJenisSepatu);
-            mParent = itemView.findViewById(R.id.linearLayout);
+            mParent = itemView.findViewById(R.id.sepatulayout);
         }
     }
 

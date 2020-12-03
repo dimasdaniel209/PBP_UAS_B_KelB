@@ -15,7 +15,7 @@ public interface ApiInterface {
 
     @GET("setrika/{id}")
     Call<SetrikaResponse> getSetrikaById(@Path("id")String id,
-                                      @Query("data") String data);
+                                   @Query("data") String data);
 
     @POST("setrika")
     @FormUrlEncoded

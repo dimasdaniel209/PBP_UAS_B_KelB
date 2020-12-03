@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.laundry.laundry.R;
 import com.laundry.laundry.database.SetrikaDAO;
+import com.laundry.laundry.ui.setrika.DetailSetrika;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +36,7 @@ public class SetrikaRecyclerAdapter extends RecyclerView.Adapter<SetrikaRecycler
     @NonNull
     @Override
     public RoomViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        context = parent.getContext();
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
         View view = layoutInflater.inflate(R.layout.recycler_adapter_setrika, parent, false);
         return new RoomViewHolder(view);
@@ -43,6 +45,7 @@ public class SetrikaRecyclerAdapter extends RecyclerView.Adapter<SetrikaRecycler
     @Override
     public void onBindViewHolder(@NonNull RoomViewHolder holder, int position) {
         final SetrikaDAO brg = filteredDataList.get(position);
+
         holder.tvId.setText(brg.getId());
         holder.tvBerat.setText(String.valueOf(brg.getBerat()));
         holder.tvJumlah.setText(String.valueOf(brg.getJumlah_pakaian()));
@@ -51,13 +54,13 @@ public class SetrikaRecyclerAdapter extends RecyclerView.Adapter<SetrikaRecycler
         holder.mParent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                FragmentManager manager = ((AppCompatActivity) context).getSupportFragmentManager();
-//                DetailUserFragment dialog = new DetailUserFragment();
-//                dialog.show(manager, "dialog");
-//
-//                Bundle args = new Bundle();
-//                args.putString("id", brg.getId());
-//                dialog.setArguments(args);
+                FragmentManager manager = ((AppCompatActivity) context).getSupportFragmentManager();
+                DetailSetrika dialog = new DetailSetrika();
+                dialog.show(manager, "dialog");
+
+                Bundle args = new Bundle();
+                args.putString("id", brg.getId());
+                dialog.setArguments(args);
             }
         });
     }
@@ -77,7 +80,7 @@ public class SetrikaRecyclerAdapter extends RecyclerView.Adapter<SetrikaRecycler
             tvBerat = itemView.findViewById(R.id.tvBeratSetrika);
             tvJumlah = itemView.findViewById(R.id.tvJumlahSetrika);
             tvJenis = itemView.findViewById(R.id.tvJenisSetrika);
-            mParent = itemView.findViewById(R.id.linearLayout);
+            mParent = itemView.findViewById(R.id.setrikalayout);
         }
     }
 

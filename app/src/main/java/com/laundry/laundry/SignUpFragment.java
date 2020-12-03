@@ -103,6 +103,16 @@ public class SignUpFragment extends Fragment {
                     hashMap.put("alamat",alamat_input);
                     hashMap.put("email",email_input);
 
+                    firebaseAuth.getCurrentUser().sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if(task.isSuccessful()){
+                                Toast.makeText(getActivity().getApplicationContext(), "User registered successfully", Toast.LENGTH_SHORT).show();
+
+                            }
+                        }
+                    });
+
                     reference.setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {

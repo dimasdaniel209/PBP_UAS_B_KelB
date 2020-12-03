@@ -87,11 +87,17 @@ public class SignInFragment extends Fragment {
                                 Toast.makeText(getActivity().getApplicationContext(), "SignIn Failed", Toast.LENGTH_SHORT).show();
                                 progressBar.setVisibility(View.GONE);
                             }else{
-                                Toast.makeText(getActivity().getApplicationContext(), "Sign In Successfull", Toast.LENGTH_SHORT).show();
-                                createNotificationChannel();
-                                addNotification();
-                                Intent i = new Intent(getActivity().getApplicationContext(),MainActivity.class);
-                                startActivity(i);
+                                if(firebaseAuth.getCurrentUser().isEmailVerified()){
+                                    Toast.makeText(getActivity().getApplicationContext(), "Sign In Successfull", Toast.LENGTH_SHORT).show();
+                                    createNotificationChannel();
+                                    addNotification();
+                                    Intent i = new Intent(getActivity().getApplicationContext(),MainActivity.class);
+                                    startActivity(i);
+                                }
+                                else{
+                                    Toast.makeText(getActivity().getApplicationContext(), "Please Verification Your Email", Toast.LENGTH_SHORT).show();
+                                    progressBar.setVisibility(View.GONE);
+                                }
                             }
                         }
                     });

@@ -21,11 +21,11 @@
     <string name="menu_aboutus">About Us</string>
     <string name="menu_profile">Profile</string>
 
-    <string name="search">Cari Id Order</string>
-    <string name="title_home">List Order</string>
+    <string name="search">Cari Id Order Laundry</string>
+    <string name="title_home">List Order Laundry</string>
 
-    <string name="addOrder">Tambah Order</string>
-    <string name="updateOrder">Edit Order</string>
+    <string name="addOrder">Tambah Order Laundry</string>
+    <string name="updateOrder">Edit Order Laundry</string>
 
     <string name="lbl_email">Email</string>
     <string name="lbl_password">Password</string>

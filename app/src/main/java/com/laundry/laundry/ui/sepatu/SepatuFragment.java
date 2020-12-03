@@ -3,6 +3,7 @@ package com.laundry.laundry.ui.sepatu;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,12 +15,14 @@ import android.view.ViewGroup;
 import android.widget.SearchView;
 import android.widget.Toast;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.laundry.laundry.R;
 import com.laundry.laundry.adapter.SepatuRecyclerAdapter;
 import com.laundry.laundry.api.ApiClient;
 import com.laundry.laundry.api.ApiInterface;
 import com.laundry.laundry.api.SepatuResponse;
 import com.laundry.laundry.database.SepatuDAO;
+import com.laundry.laundry.ui.setrika.AddSetrika;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +37,7 @@ public class SepatuFragment extends Fragment {
     private List<SepatuDAO> sepatu = new ArrayList<>();
     private SearchView searchView;
     private SwipeRefreshLayout swipeRefresh;
+    private FloatingActionButton fabAdd;
 
     public SepatuFragment() {
         // Required empty public constructor
@@ -47,6 +51,15 @@ public class SepatuFragment extends Fragment {
 
         searchView = view.findViewById(R.id.search_view);
         swipeRefresh = view.findViewById(R.id.swipe_refresh);
+        fabAdd = view.findViewById(R.id.fab);
+
+        fabAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.frame_layout, new AddSepatu()).addToBackStack(null).commit();
+            }
+        });
 
         swipeRefresh.setRefreshing(true);
         loadSepatu(view);

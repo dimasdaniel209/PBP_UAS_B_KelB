@@ -1,11 +1,12 @@
 package com.laundry.laundry.ui.setrika;
 
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
+
 import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
@@ -15,22 +16,26 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.material.button.MaterialButton;
 import com.laundry.laundry.R;
-import com.laundry.laundry.api.ApiClient;
-import com.laundry.laundry.api.ApiInterface;
-import com.laundry.laundry.api.SetrikaResponse;
+import com.laundry.laundry.api.SetrikaAPI;
+import com.laundry.laundry.model.Setrika;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import static com.android.volley.Request.Method.POST;
 
 public class DetailSetrika extends DialogFragment {
     private TextView tvId, tvJumlah, tvBerat, tvJenis;
-    private String sIdSetrika, sJumlah, sBerat, sJenis;
     private ImageButton ibClose;
-    private ProgressDialog progressDialog;
     private MaterialButton btnDelete, btnUpdate;
+    private View view;
+    private Setrika setrika;
 
     public static DetailSetrika newInstance(){ return new DetailSetrika(); }
 
@@ -43,12 +48,9 @@ public class DetailSetrika extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_detail_setrika, container, false);
+        view = inflater.inflate(R.layout.fragment_detail_setrika, container, false);
 
-        sIdSetrika = getArguments().getString("id", "");
-
-        progressDialog = new ProgressDialog(getContext());
-        progressDialog.show();
+        setrika = (Setrika) getArguments().getSerializable("setrika");
 
         ibClose = view.findViewById(R.id.ibClose);
         ibClose.setOnClickListener(new View.OnClickListener() {
@@ -68,69 +70,74 @@ public class DetailSetrika extends DialogFragment {
                         .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
-                                Call<SetrikaResponse> delete = apiService.deleteSetrika(sIdSetrika,"data");
+                                RequestQueue queue = Volley.newRequestQueue(view.getContext());
 
-                                delete.enqueue(new Callback<SetrikaResponse>() {
+                                StringRequest stringRequest = new StringRequest(POST, SetrikaAPI.URL_DELETE + setrika.getStringId(), new com.android.volley.Response.Listener<String>() {
                                     @Override
-                                    public void onResponse(Call<SetrikaResponse> call, Response<SetrikaResponse> response) {
-                                        progressDialog.dismiss();
-                                        Toast.makeText(getActivity().getApplicationContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
-                                        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
-                                        fragmentTransaction.hide(DetailSetrika.this).commit();
+                                    public void onResponse(String response) {
+                                        try {
+                                            JSONObject obj = new JSONObject(response);
+                                            Toast.makeText(view.getContext(), obj.getString("message"), Toast.LENGTH_SHORT).show();
+                                            dismiss();
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
                                     }
-
+                                }, new com.android.volley.Response.ErrorListener() {
                                     @Override
-                                    public void onFailure(Call<SetrikaResponse> call, Throwable t) {
-                                        Toast.makeText(getActivity().getApplicationContext(), "Kesalahan Jaringan", Toast.LENGTH_SHORT).show();
-                                        progressDialog.dismiss();
+                                    public void onErrorResponse(VolleyError error) {
+                                        Toast.makeText(view.getContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
                                     }
                                 });
+
+                                queue.add(stringRequest);
                             }
                         }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
-                    }
-                }).show();
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+                            }
+                        })
+                        .show();
             }
         });
 
+        btnUpdate = view.findViewById(R.id.btnUpdate);
+        btnUpdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Bundle args = new Bundle();
+                args.putSerializable("setrika", setrika);
+                Fragment fragment = new UpdateSetrika();
+                fragment.setArguments(args);
+
+                dismiss();
+
+                FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.frame_layout, fragment)
+                        .setCustomAnimations(
+                            R.anim.slide_in,  // enter
+                            R.anim.fade_out,  // exit
+                            R.anim.fade_in,   // popEnter
+                            R.anim.slide_out) // popExit
+                        .addToBackStack(null).commit();
+            }
+        });
+
+        loadSetrika(setrika);
+
+        return view;
+    }
+
+    public void loadSetrika(Setrika setrika){
         tvId = view.findViewById(R.id.tvIdSetrika);
         tvJumlah = view.findViewById(R.id.tvJumlahSetrika);
         tvBerat = view.findViewById(R.id.tvBeratSetrika);
         tvJenis = view.findViewById(R.id.tvJenisSetrika);
 
-        loadSetrikaById(sIdSetrika);
-
-        return view;
-    }
-
-    private void loadSetrikaById(String id) {
-        ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
-        Call<SetrikaResponse> add = apiService.getSetrikaById(id, "data");
-
-        add.enqueue(new Callback<SetrikaResponse>() {
-            @Override
-            public void onResponse(Call<SetrikaResponse> call, Response<SetrikaResponse> response) {
-                sIdSetrika = response.body().getSetrikas().get(0).getId();
-                sJumlah = String.valueOf(response.body().getSetrikas().get(0).getJumlah_pakaian());
-                sBerat = String.valueOf(response.body().getSetrikas().get(0).getBerat());
-                sJenis = response.body().getSetrikas().get(0).getJenis_pakaian();
-
-                tvId.setText(sIdSetrika);
-                tvJumlah.setText(sJumlah);
-                tvBerat.setText(sBerat);
-                tvJenis.setText(sJenis);
-
-                progressDialog.dismiss();
-            }
-
-            @Override
-            public void onFailure(Call<SetrikaResponse> call, Throwable t) {
-                Toast.makeText(getContext(), "Kesalahan Jaringan", Toast.LENGTH_SHORT).show();
-                progressDialog.dismiss();
-            }
-        });
+        tvId.setText(setrika.getStringId());
+        tvJumlah.setText(String.valueOf(setrika.getJumlah_pakaian()));
+        tvBerat.setText(String.valueOf(setrika.getBerat()));
+        tvJenis.setText(setrika.getJenis_pakaian());
     }
 }

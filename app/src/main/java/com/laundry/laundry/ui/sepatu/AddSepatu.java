@@ -16,15 +16,20 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.material.textfield.TextInputEditText;
 import com.laundry.laundry.R;
-import com.laundry.laundry.api.ApiClient;
-import com.laundry.laundry.api.ApiInterface;
-import com.laundry.laundry.api.SepatuResponse;
+import com.laundry.laundry.api.SepatuAPI;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import java.util.HashMap;
+import java.util.Map;
+
+import static com.android.volley.Request.Method.POST;
 
 public class AddSepatu extends Fragment {
     private TextInputEditText edtJenisSepatu, edtKondisi;
@@ -68,14 +73,7 @@ public class AddSepatu extends Fragment {
         cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction()
-                        .setCustomAnimations(
-                                R.anim.slide_in,  // enter
-                                R.anim.fade_out,  // exit
-                                R.anim.fade_in,   // popEnter
-                                R.anim.slide_out // popExit
-                        );
-                fragmentTransaction.hide(AddSepatu.this).commit();
+                closeFragment();
             }
         });
 
@@ -119,36 +117,51 @@ public class AddSepatu extends Fragment {
     }
 
     private void addSepatu() {
-        ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
-        Call<SepatuResponse> add = apiService.createSepatu(tempJenisLayanan, tempKondisi, tempJenisSepatu);
+        RequestQueue queue = Volley.newRequestQueue(getContext());
 
-        try {
-            add.enqueue(new Callback<SepatuResponse>() {
-                @Override
-                public void onResponse(Call<SepatuResponse> call, Response<SepatuResponse> response) {
-                    progressDialog.dismiss();
-                    Toast.makeText(getActivity().getApplicationContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
+        StringRequest stringRequest = new StringRequest(POST, SepatuAPI.URL_ADD, new com.android.volley.Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                progressDialog.dismiss();
+                try {
+                    JSONObject obj = new JSONObject(response);
 
-                    FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction()
-                            .setCustomAnimations(
-                                    R.anim.slide_in,  // enter
-                                    R.anim.fade_out,  // exit
-                                    R.anim.fade_in,   // popEnter
-                                    R.anim.slide_out // popExit
-                            );
-                    fragmentTransaction.hide(AddSepatu.this).commit();
+                    Toast.makeText(getContext(), obj.getString("message"), Toast.LENGTH_SHORT).show();
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
+            }
+        }, new com.android.volley.Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                progressDialog.dismiss();
+                Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
+                closeFragment();
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams()
+            {
+                Map<String, String>  params = new HashMap<String, String>();
+                params.put("jenis_layanan", tempJenisLayanan);
+                params.put("kondisi", tempKondisi);
+                params.put("jenis_sepatu", tempJenisSepatu);
 
-                @Override
-                public void onFailure(Call<SepatuResponse> call, Throwable t) {
-                    Toast.makeText(getActivity().getApplicationContext(), "Kesalahan Jaringan", Toast.LENGTH_SHORT).show();
-                    progressDialog.dismiss();
-                }
-            });
-        }catch (Exception e){
-            Toast.makeText(getActivity(), "Terdapat Kesalahan", Toast.LENGTH_SHORT).show();
-        }
+                return params;
+            }
+        };
 
+        queue.add(stringRequest);
     }
 
+    public void closeFragment(){
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.hide(AddSepatu.this).detach(this)
+                .setCustomAnimations(
+                        R.anim.slide_in,  // enter
+                        R.anim.fade_out,  // exit
+                        R.anim.fade_in,   // popEnter
+                        R.anim.slide_out) // popExit
+                .attach(this).commit();
+    }
 }

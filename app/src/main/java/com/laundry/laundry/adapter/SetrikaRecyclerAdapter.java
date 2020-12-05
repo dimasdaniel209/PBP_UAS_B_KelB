@@ -16,18 +16,19 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.laundry.laundry.R;
-import com.laundry.laundry.database.SetrikaDAO;
+import com.laundry.laundry.model.Setrika;
 import com.laundry.laundry.ui.setrika.DetailSetrika;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SetrikaRecyclerAdapter extends RecyclerView.Adapter<SetrikaRecyclerAdapter.RoomViewHolder> implements Filterable {
-    private List<SetrikaDAO> dataList;
-    private List<SetrikaDAO> filteredDataList;
+public class SetrikaRecyclerAdapter extends RecyclerView.Adapter<SetrikaRecyclerAdapter.adapterSetrikaViewHolder>  implements Filterable {
+    private List<Setrika> dataList;
+    private List<Setrika> filteredDataList;
     private Context context;
+    private View view;
 
-    public SetrikaRecyclerAdapter(Context context, List<SetrikaDAO> dataList){
+    public SetrikaRecyclerAdapter(Context context, List<Setrika> dataList){
         this.context = context;
         this.dataList = dataList;
         this.filteredDataList = dataList;
@@ -35,21 +36,20 @@ public class SetrikaRecyclerAdapter extends RecyclerView.Adapter<SetrikaRecycler
 
     @NonNull
     @Override
-    public RoomViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        context = parent.getContext();
+    public SetrikaRecyclerAdapter.adapterSetrikaViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-        View view = layoutInflater.inflate(R.layout.recycler_adapter_setrika, parent, false);
-        return new RoomViewHolder(view);
+        view = layoutInflater.inflate(R.layout.recycler_adapter_setrika, parent, false);
+        return new SetrikaRecyclerAdapter.adapterSetrikaViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RoomViewHolder holder, int position) {
-        final SetrikaDAO brg = filteredDataList.get(position);
+    public void onBindViewHolder(@NonNull SetrikaRecyclerAdapter.adapterSetrikaViewHolder holder, int position) {
+        final Setrika setrika = filteredDataList.get(position);
 
-        holder.tvId.setText(brg.getId());
-        holder.tvBerat.setText(String.valueOf(brg.getBerat()));
-        holder.tvJumlah.setText(String.valueOf(brg.getJumlah_pakaian()));
-        holder.tvJenis.setText(brg.getJenis_pakaian());
+        holder.tvIdSetrika.setText(setrika.getStringId());
+        holder.tvBerat.setText(String.valueOf(setrika.getBerat()));
+        holder.tvJumlah.setText(String.valueOf(setrika.getJumlah_pakaian()));
+        holder.tvJenis.setText(setrika.getJenis_pakaian());
 
         holder.mParent.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,7 +59,7 @@ public class SetrikaRecyclerAdapter extends RecyclerView.Adapter<SetrikaRecycler
                 dialog.show(manager, "dialog");
 
                 Bundle args = new Bundle();
-                args.putString("id", brg.getId());
+                args.putSerializable("setrika", setrika);
                 dialog.setArguments(args);
             }
         });
@@ -67,20 +67,20 @@ public class SetrikaRecyclerAdapter extends RecyclerView.Adapter<SetrikaRecycler
 
     @Override
     public int getItemCount() {
-        return filteredDataList.size();
+        return (filteredDataList != null) ? filteredDataList.size() : 0;
     }
 
-    public class RoomViewHolder extends RecyclerView.ViewHolder {
-        private TextView tvId, tvBerat, tvJumlah, tvJenis;
+    public class adapterSetrikaViewHolder extends RecyclerView.ViewHolder {
+        private TextView tvIdSetrika, tvBerat, tvJumlah, tvJenis;
         private LinearLayout mParent;
 
-        public RoomViewHolder(@NonNull View itemView) {
+        public adapterSetrikaViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvId = itemView.findViewById(R.id.tvIdSetrika);
-            tvBerat = itemView.findViewById(R.id.tvBeratSetrika);
-            tvJumlah = itemView.findViewById(R.id.tvJumlahSetrika);
-            tvJenis = itemView.findViewById(R.id.tvJenisSetrika);
-            mParent = itemView.findViewById(R.id.setrikalayout);
+            tvIdSetrika     = itemView.findViewById(R.id.tvIdSetrika);
+            tvBerat         = itemView.findViewById(R.id.tvBeratSetrika);
+            tvJumlah        = itemView.findViewById(R.id.tvJumlahSetrika);
+            tvJenis         = itemView.findViewById(R.id.tvJenisSetrika);
+            mParent         = itemView.findViewById(R.id.setrikalayout);
         }
     }
 
@@ -93,10 +93,10 @@ public class SetrikaRecyclerAdapter extends RecyclerView.Adapter<SetrikaRecycler
                 if(charSequenceString.isEmpty()){
                     filteredDataList = dataList;
                 } else {
-                    List<SetrikaDAO> filteredList = new ArrayList<>();
-                    for (SetrikaDAO SetrikaDAO : dataList){
-                        if(SetrikaDAO.getId().toLowerCase().contains(charSequenceString.toLowerCase())){
-                            filteredList.add(SetrikaDAO);
+                    List<Setrika> filteredList = new ArrayList<>();
+                    for (Setrika Setrika : dataList){
+                        if(Setrika.getStringId().toLowerCase().contains(charSequenceString.toLowerCase())){
+                            filteredList.add(Setrika);
                         }
                         filteredDataList = filteredList;
                     }
@@ -108,7 +108,7 @@ public class SetrikaRecyclerAdapter extends RecyclerView.Adapter<SetrikaRecycler
 
             @Override
             protected void publishResults(CharSequence constraint, FilterResults results) {
-                filteredDataList = (List<SetrikaDAO>) results.values;
+                filteredDataList = (List<Setrika>) results.values;
                 notifyDataSetChanged();
             }
         };

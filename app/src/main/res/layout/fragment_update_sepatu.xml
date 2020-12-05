@@ -9,7 +9,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:orientation="vertical"
         android:padding="16dp"
-        android:id="@+id/add_layout_ver"
+        android:id="@+id/update_layout_ver"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".ui.sepatu.AddSepatu">
@@ -116,8 +116,8 @@
                 android:layout_height="wrap_content"/>
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnAdd"
-                android:text="@string/add"
+                android:id="@+id/btnUpdate"
+                android:text="UPDATE"
                 android:layout_weight="0.8"
                 android:layout_marginEnd="8dp"
                 android:backgroundTint="#2196F3"

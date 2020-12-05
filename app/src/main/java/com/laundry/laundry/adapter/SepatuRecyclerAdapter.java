@@ -16,18 +16,19 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.laundry.laundry.R;
-import com.laundry.laundry.database.SepatuDAO;
+import com.laundry.laundry.model.Sepatu;
 import com.laundry.laundry.ui.sepatu.DetailSepatu;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SepatuRecyclerAdapter extends RecyclerView.Adapter<SepatuRecyclerAdapter.RoomViewHolder> implements Filterable {
-    private List<SepatuDAO> dataList;
-    private List<SepatuDAO> filteredDataList;
-    private Context context, context2;
+public class SepatuRecyclerAdapter extends RecyclerView.Adapter<SepatuRecyclerAdapter.adapterSepatuViewHolder> implements Filterable {
+    private List<Sepatu> dataList;
+    private List<Sepatu> filteredDataList;
+    private Context context;
+    private View view;
 
-    public SepatuRecyclerAdapter(Context context, List<SepatuDAO> dataList){
+    public SepatuRecyclerAdapter(Context context, List<Sepatu> dataList) {
         this.context = context;
         this.dataList = dataList;
         this.filteredDataList = dataList;
@@ -35,30 +36,30 @@ public class SepatuRecyclerAdapter extends RecyclerView.Adapter<SepatuRecyclerAd
 
     @NonNull
     @Override
-    public SepatuRecyclerAdapter.RoomViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        context2 = parent.getContext();
+    public SepatuRecyclerAdapter.adapterSepatuViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-        View view = layoutInflater.inflate(R.layout.recycler_adapter_sepatu, parent, false);
-        return new SepatuRecyclerAdapter.RoomViewHolder(view);
+        view = layoutInflater.inflate(R.layout.recycler_adapter_sepatu, parent, false);
+        return new SepatuRecyclerAdapter.adapterSepatuViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull SepatuRecyclerAdapter.RoomViewHolder holder, int position) {
-        final SepatuDAO brg = filteredDataList.get(position);
-        holder.tvId.setText(brg.getId());
-        holder.tvLayanan.setText(brg.getJenis_layanan());
-        holder.tvKondisi.setText(brg.getKondisi());
-        holder.tvJenis.setText(brg.getJenis_sepatu());
+    public void onBindViewHolder(@NonNull SepatuRecyclerAdapter.adapterSepatuViewHolder holder, int position) {
+        final Sepatu sepatu = filteredDataList.get(position);
+
+        holder.tvIdSepatu.setText(sepatu.getStringId());
+        holder.tvJenisLayanan.setText(sepatu.getJenis_layanan());
+        holder.tvKondisi.setText(sepatu.getKondisi());
+        holder.tvJenisSepatu.setText(sepatu.getJenis_sepatu());
 
         holder.mParent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FragmentManager manager = ((AppCompatActivity) context2).getSupportFragmentManager();
+                FragmentManager manager = ((AppCompatActivity) context).getSupportFragmentManager();
                 DetailSepatu dialog = new DetailSepatu();
                 dialog.show(manager, "dialog");
 
                 Bundle args = new Bundle();
-                args.putString("id", brg.getId());
+                args.putSerializable("sepatu", sepatu);
                 dialog.setArguments(args);
             }
         });
@@ -66,22 +67,23 @@ public class SepatuRecyclerAdapter extends RecyclerView.Adapter<SepatuRecyclerAd
 
     @Override
     public int getItemCount() {
-        return filteredDataList.size();
+        return (filteredDataList != null) ? filteredDataList.size() : 0;
     }
 
-    public class RoomViewHolder extends RecyclerView.ViewHolder {
-        private TextView tvId, tvLayanan, tvKondisi, tvJenis;
+    public class adapterSepatuViewHolder extends RecyclerView.ViewHolder {
+        private TextView tvIdSepatu, tvJenisLayanan, tvKondisi, tvJenisSepatu;
         private LinearLayout mParent;
 
-        public RoomViewHolder(@NonNull View itemView) {
+        public adapterSepatuViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvId = itemView.findViewById(R.id.tvIdSepatu);
-            tvLayanan = itemView.findViewById(R.id.tvLayananSepatu);
-            tvKondisi = itemView.findViewById(R.id.tvKondisiSepatu);
-            tvJenis = itemView.findViewById(R.id.tvJenisSepatu);
-            mParent = itemView.findViewById(R.id.sepatulayout);
+            tvIdSepatu      = itemView.findViewById(R.id.tvIdSepatu);
+            tvJenisLayanan  = itemView.findViewById(R.id.tvLayananSepatu);
+            tvKondisi       = itemView.findViewById(R.id.tvKondisiSepatu);
+            tvJenisSepatu   = itemView.findViewById(R.id.tvJenisSepatu);
+            mParent         = itemView.findViewById(R.id.sepatulayout);
         }
     }
+
 
     @Override
     public Filter getFilter() {
@@ -92,10 +94,10 @@ public class SepatuRecyclerAdapter extends RecyclerView.Adapter<SepatuRecyclerAd
                 if(charSequenceString.isEmpty()){
                     filteredDataList = dataList;
                 } else {
-                    List<SepatuDAO> filteredList = new ArrayList<>();
-                    for (SepatuDAO SepatuDAO : dataList){
-                        if(SepatuDAO.getId().toLowerCase().contains(charSequenceString.toLowerCase())){
-                            filteredList.add(SepatuDAO);
+                    List<Sepatu> filteredList = new ArrayList<>();
+                    for (Sepatu Sepatu : dataList){
+                        if(Sepatu.getStringId().toLowerCase().contains(charSequenceString.toLowerCase())){
+                            filteredList.add(Sepatu);
                         }
                         filteredDataList = filteredList;
                     }
@@ -107,7 +109,7 @@ public class SepatuRecyclerAdapter extends RecyclerView.Adapter<SepatuRecyclerAd
 
             @Override
             protected void publishResults(CharSequence constraint, FilterResults results) {
-                filteredDataList = (List<SepatuDAO>) results.values;
+                filteredDataList = (List<Sepatu>) results.values;
                 notifyDataSetChanged();
             }
         };

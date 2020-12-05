@@ -15,26 +15,32 @@ import android.view.ViewGroup;
 import android.widget.SearchView;
 import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.laundry.laundry.R;
 import com.laundry.laundry.adapter.SepatuRecyclerAdapter;
-import com.laundry.laundry.api.ApiClient;
-import com.laundry.laundry.api.ApiInterface;
-import com.laundry.laundry.api.SepatuResponse;
-import com.laundry.laundry.database.SepatuDAO;
-import com.laundry.laundry.ui.setrika.AddSetrika;
+import com.laundry.laundry.api.SepatuAPI;
+import com.laundry.laundry.model.Sepatu;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import static com.android.volley.Request.Method.GET;
 
 public class SepatuFragment extends Fragment {
     private RecyclerView recyclerView;
-    private SepatuRecyclerAdapter recyclerAdapter;
-    private List<SepatuDAO> sepatu = new ArrayList<>();
+    private SepatuRecyclerAdapter adapter;
+    private List<Sepatu> listSepatu;
+    private View view;
+
     private SearchView searchView;
     private SwipeRefreshLayout swipeRefresh;
     private FloatingActionButton fabAdd;
@@ -47,12 +53,12 @@ public class SepatuFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_sepatu, container, false);
+        view = inflater.inflate(R.layout.fragment_sepatu, container, false);
 
         searchView = view.findViewById(R.id.search_view);
         swipeRefresh = view.findViewById(R.id.swipe_refresh);
-        fabAdd = view.findViewById(R.id.fab);
 
+        fabAdd = view.findViewById(R.id.fab);
         fabAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -62,55 +68,98 @@ public class SepatuFragment extends Fragment {
         });
 
         swipeRefresh.setRefreshing(true);
-        loadSepatu(view);
+
+        loadDataSepatu();
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                loadSepatu(view);
+                loadDataSepatu();
             }
         });
+
         return view;
     }
 
-    private void loadSepatu(View view) {
-        ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
-        Call<SepatuResponse> call = apiService.getAllSepatu("data");
-
-        call.enqueue(new Callback<SepatuResponse>() {
-            @Override
-            public void onResponse(Call<SepatuResponse> call, Response<SepatuResponse> response) {
-                generateDataList(response.body().getSepatus(), view);
-                swipeRefresh.setRefreshing(false);
-            }
-
-            @Override
-            public void onFailure(Call<SepatuResponse> call, Throwable t) {
-                Toast.makeText(getActivity(), "Kesalahan Jaringan", Toast.LENGTH_SHORT).show();
-                swipeRefresh.setRefreshing(false);
-            }
-        });
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
-    private void generateDataList(List<SepatuDAO> sepatuList, View view) {
+    private void loadDataSepatu() {
+        setAdapter();
+        getSepatu();
+    }
+
+    private void setAdapter() {
+        getActivity().setTitle("Data Sepatu");
+
+        listSepatu = new ArrayList<Sepatu>();
         recyclerView = view.findViewById(R.id.sepatu_rv);
-        recyclerAdapter = new SepatuRecyclerAdapter(getActivity().getApplicationContext(), sepatuList);
+        adapter = new SepatuRecyclerAdapter(view.getContext(), listSepatu);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
+
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(recyclerAdapter);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(adapter);
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String queryString) {
-                recyclerAdapter.getFilter().filter(queryString);
+                adapter.getFilter().filter(queryString);
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String queryString) {
-                recyclerAdapter.getFilter().filter(queryString);
+                adapter.getFilter().filter(queryString);
                 return false;
             }
         });
     }
+
+    private void getSepatu() {
+        RequestQueue queue = Volley.newRequestQueue(view.getContext());
+
+        final JsonObjectRequest stringRequest = new JsonObjectRequest(GET, SepatuAPI.URL_SELECT
+                , null, new com.android.volley.Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    JSONArray jsonArray = response.getJSONArray("data");
+
+                    if(!listSepatu.isEmpty())
+                        listSepatu.clear();
+
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject jsonObject = (JSONObject) jsonArray.get(i);
+
+                        int id                  = jsonObject.optInt("id");
+                        String jenis_layanan    = jsonObject.optString("jenis_layanan");
+                        String kondisi          = jsonObject.optString("kondisi");
+                        String jenis_sepatu     = jsonObject.optString("jenis_sepatu");
+
+                        Sepatu sepatu = new Sepatu(id, jenis_layanan, kondisi, jenis_sepatu);
+
+                        listSepatu.add(sepatu);
+                    }
+                    adapter.notifyDataSetChanged();
+                }catch (JSONException e){
+                    e.printStackTrace();
+                }
+                Toast.makeText(view.getContext(), response.optString("message"),
+                        Toast.LENGTH_SHORT).show();
+                swipeRefresh.setRefreshing(false);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(view.getContext(), error.getMessage(),
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        queue.add(stringRequest);
+    }
+
 }

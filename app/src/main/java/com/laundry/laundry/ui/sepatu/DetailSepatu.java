@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
@@ -15,15 +16,19 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.material.button.MaterialButton;
 import com.laundry.laundry.R;
-import com.laundry.laundry.api.ApiClient;
-import com.laundry.laundry.api.ApiInterface;
-import com.laundry.laundry.api.SepatuResponse;
+import com.laundry.laundry.api.SepatuAPI;
+import com.laundry.laundry.model.Sepatu;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import static com.android.volley.Request.Method.POST;
 
 public class DetailSepatu extends DialogFragment {
     private TextView tvId, tvJenisLayanan, tvKondisi, tvJenisSepatu;
@@ -31,6 +36,8 @@ public class DetailSepatu extends DialogFragment {
     private ImageButton ibClose;
     private ProgressDialog progressDialog;
     private MaterialButton btnDelete, btnUpdate;
+    private View view;
+    private Sepatu sepatu;
 
     public static DetailSepatu newInstance(){ return new DetailSepatu(); }
 
@@ -43,12 +50,9 @@ public class DetailSepatu extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_detail_sepatu, container, false);
+        view = inflater.inflate(R.layout.fragment_detail_sepatu, container, false);
 
-        sIdSepatu = getArguments().getString("id", "");
-
-        progressDialog = new ProgressDialog(getContext());
-        progressDialog.show();
+        sepatu = (Sepatu) getArguments().getSerializable("sepatu");
 
         ibClose = view.findViewById(R.id.ibClose);
         ibClose.setOnClickListener(new View.OnClickListener() {
@@ -57,6 +61,7 @@ public class DetailSepatu extends DialogFragment {
                 dismiss();
             }
         });
+
         btnDelete = view.findViewById(R.id.btnDelete);
         btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,24 +72,27 @@ public class DetailSepatu extends DialogFragment {
                         .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
-                                Call<SepatuResponse> delete = apiService.deleteSepatu(sIdSepatu,"data");
+                                RequestQueue queue = Volley.newRequestQueue(view.getContext());
 
-                                delete.enqueue(new Callback<SepatuResponse>() {
+                                StringRequest stringRequest = new StringRequest(POST, SepatuAPI.URL_DELETE + sepatu.getStringId(), new com.android.volley.Response.Listener<String>() {
                                     @Override
-                                    public void onResponse(Call<SepatuResponse> call, Response<SepatuResponse> response) {
-                                        progressDialog.dismiss();
-                                        Toast.makeText(getActivity().getApplicationContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
-                                        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
-                                        fragmentTransaction.hide(DetailSepatu.this).commit();
+                                    public void onResponse(String response) {
+                                        try {
+                                            JSONObject obj = new JSONObject(response);
+                                            Toast.makeText(view.getContext(), obj.getString("message"), Toast.LENGTH_SHORT).show();
+                                            dismiss();
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
                                     }
-
+                                }, new com.android.volley.Response.ErrorListener() {
                                     @Override
-                                    public void onFailure(Call<SepatuResponse> call, Throwable t) {
-                                        Toast.makeText(getActivity().getApplicationContext(), "Kesalahan Jaringan", Toast.LENGTH_SHORT).show();
-                                        progressDialog.dismiss();
+                                    public void onErrorResponse(VolleyError error) {
+                                        Toast.makeText(view.getContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
                                     }
                                 });
+
+                                queue.add(stringRequest);
                             }
                         }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
@@ -95,41 +103,42 @@ public class DetailSepatu extends DialogFragment {
             }
         });
 
-        tvId = view.findViewById(R.id.tvIdSepatu);
-        tvJenisLayanan = view.findViewById(R.id.tvJenisSepatu);
-        tvKondisi = view.findViewById(R.id.tvKondisiSepatu);
-        tvJenisSepatu = view.findViewById(R.id.tvJenisSepatu);
+        btnUpdate = view.findViewById(R.id.btnUpdate);
+        btnUpdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Bundle args = new Bundle();
+                args.putSerializable("sepatu", sepatu);
+                Fragment fragment = new UpdateSepatu();
+                fragment.setArguments(args);
 
-        loadSepatuById(sIdSepatu);
+                dismiss();
+
+                FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.frame_layout, fragment)
+                        .setCustomAnimations(
+                            R.anim.slide_in,  // enter
+                            R.anim.fade_out,  // exit
+                            R.anim.fade_in,   // popEnter
+                            R.anim.slide_out) // popExit
+                        .addToBackStack(null).commit();
+            }
+        });
+
+        loadSepatu(sepatu);
 
         return view;
     }
 
-    private void loadSepatuById(String id) {
-        ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
-        Call<SepatuResponse> add = apiService.getSepatuById(id, "data");
+    private void loadSepatu(Sepatu sepatu) {
+        tvId = view.findViewById(R.id.tvIdSepatu);
+        tvJenisLayanan = view.findViewById(R.id.tvLayananSepatu);
+        tvKondisi = view.findViewById(R.id.tvKondisiSepatu);
+        tvJenisSepatu = view.findViewById(R.id.tvJenisSepatu);
 
-        add.enqueue(new Callback<SepatuResponse>() {
-            @Override
-            public void onResponse(Call<SepatuResponse> call, Response<SepatuResponse> response) {
-                sIdSepatu= response.body().getSepatus().get(0).getId();
-                sJenisLayanan = response.body().getSepatus().get(0).getJenis_layanan();
-                sKondisi = response.body().getSepatus().get(0).getKondisi();
-                sJenisSepatu = response.body().getSepatus().get(0).getJenis_sepatu();
-
-                tvId.setText(sIdSepatu);
-                tvJenisLayanan.setText(sJenisLayanan);
-                tvKondisi.setText(sKondisi);
-                tvJenisSepatu.setText(sJenisSepatu);
-
-                progressDialog.dismiss();
-            }
-
-            @Override
-            public void onFailure(Call<SepatuResponse> call, Throwable t) {
-                Toast.makeText(getContext(), "Kesalahan Jaringan", Toast.LENGTH_SHORT).show();
-                progressDialog.dismiss();
-            }
-        });
+        tvId.setText(String.valueOf(sepatu.getStringId()));
+        tvJenisLayanan.setText(sepatu.getJenis_layanan());
+        tvKondisi.setText(sepatu.getKondisi());
+        tvJenisSepatu.setText(sepatu.getJenis_sepatu());
     }
 }

@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
 public class LoginActivity extends AppCompatActivity {
+    
 
     Button signUp, signIn;
 
